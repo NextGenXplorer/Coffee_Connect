@@ -224,11 +224,12 @@ const AppContent = () => {
     console.log(`📊 Ad Status: isLoaded=${isLoaded}`);
 
     // Show interstitial ad occasionally when switching tabs (not every time to avoid annoyance)
-    // Show ad 30% of the time when changing tabs
+    // TEMPORARY: Show ad 100% of time for testing (change 1.0 back to 0.3 for production)
+    const AD_SHOW_PROBABILITY = 1.0; // Set to 0.3 for production (30% chance)
     const randomChance = Math.random();
-    console.log(`🎲 Random chance: ${randomChance} (need < 0.3)`);
+    console.log(`🎲 Random chance: ${randomChance} (need < ${AD_SHOW_PROBABILITY})`);
 
-    if (currentRoute && currentRoute !== previousRoute && isLoaded && randomChance < 0.3) {
+    if (currentRoute && currentRoute !== previousRoute && isLoaded && randomChance < AD_SHOW_PROBABILITY) {
       console.log(`🎬 Showing interstitial ad: ${previousRoute} → ${currentRoute}`);
       showAd();
     } else if (currentRoute !== previousRoute) {

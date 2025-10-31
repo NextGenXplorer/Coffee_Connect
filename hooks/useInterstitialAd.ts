@@ -18,8 +18,12 @@ import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile
 // Production Interstitial Ad Unit ID
 const PRODUCTION_AD_UNIT_ID = 'ca-app-pub-5029120740748641/3500087889';
 
+// TEMPORARY: Force test ads to verify ads system works
+// Change to false once test ads work, then wait 24-48hrs for production ads
+const FORCE_TEST_ADS = true;
+
 // Use test ID in development, production ID in production
-const AD_UNIT_ID = __DEV__ ? TestIds.INTERSTITIAL : PRODUCTION_AD_UNIT_ID;
+const AD_UNIT_ID = (__DEV__ || FORCE_TEST_ADS) ? TestIds.INTERSTITIAL : PRODUCTION_AD_UNIT_ID;
 
 interface UseInterstitialAdOptions {
   adUnitId?: string;

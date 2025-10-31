@@ -15,8 +15,12 @@ import { BackHandler } from 'react-native';
 // Production Rewarded Interstitial Ad Unit ID
 const PRODUCTION_AD_UNIT_ID = 'ca-app-pub-5029120740748641/8584893600';
 
+// TEMPORARY: Force test ads to verify ads system works
+// Change to false once test ads work, then wait 24-48hrs for production ads
+const FORCE_TEST_ADS = true;
+
 // Use test ID in development, production ID in production
-const AD_UNIT_ID = __DEV__ ? TestIds.REWARDED_INTERSTITIAL : PRODUCTION_AD_UNIT_ID;
+const AD_UNIT_ID = (__DEV__ || FORCE_TEST_ADS) ? TestIds.REWARDED_INTERSTITIAL : PRODUCTION_AD_UNIT_ID;
 
 interface UseExitAdOptions {
   adUnitId?: string;

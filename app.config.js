@@ -50,14 +50,13 @@ module.exports = {
           color: "#6F4E37",
           sounds: []
         }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          androidAppId: "ca-app-pub-5029120740748641~1692182197", // Production AdMob App ID for Coffee Connect
+        }
       ]
-      // ADS DISABLED FOR COFFEE CONNECT
-      // [
-      //   "react-native-google-mobile-ads",
-      //   {
-      //     androidAppId: "ca-app-pub-5029120740748641~7524355155", // Production AdMob App ID
-      //   }
-      // ]
     ],
     web: {
       favicon: "./assets/coffee_logo.png"

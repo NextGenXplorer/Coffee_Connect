@@ -11,10 +11,10 @@ import * as Notifications from 'expo-notifications';
 import { db } from './firebase.config';
 import { doc, setDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// ADS DISABLED FOR COFFEE CONNECT
-// import { useInterstitialAd } from './hooks/useInterstitialAd';
-// import { useExitAd } from './hooks/useExitAd';
-// import MobileAds from 'react-native-google-mobile-ads';
+// Google Mobile Ads for Coffee Connect
+import { useInterstitialAd } from './hooks/useInterstitialAd';
+import { useExitAd } from './hooks/useExitAd';
+import MobileAds from 'react-native-google-mobile-ads';
 
 // Create context for notifications navigation
 const NotificationsContext = createContext<{
@@ -156,24 +156,23 @@ const AppContent = () => {
     checkFirstLaunch();
   }, []);
 
-  // ADS DISABLED FOR COFFEE CONNECT
-  // Initialize Google Mobile Ads
-  // useEffect(() => {
-  //   MobileAds()
-  //     .initialize()
-  //     .then(adapterStatuses => {
-  //       console.log('AdMob initialized:', adapterStatuses);
-  //     })
-  //     .catch(error => {
-  //       console.error('AdMob initialization error:', error);
-  //     });
-  // }, []);
+  // Initialize Google Mobile Ads for Coffee Connect
+  useEffect(() => {
+    MobileAds()
+      .initialize()
+      .then(adapterStatuses => {
+        console.log('AdMob initialized:', adapterStatuses);
+      })
+      .catch(error => {
+        console.error('AdMob initialization error:', error);
+      });
+  }, []);
 
   // Interstitial ad hook for tab navigation
-  // const { showAd, isLoaded } = useInterstitialAd();
+  const { showAd, isLoaded } = useInterstitialAd();
 
   // Exit ad hook - shows rewarded interstitial when user presses back button
-  // useExitAd({ enabled: true });
+  useExitAd({ enabled: true });
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => {
@@ -210,19 +209,18 @@ const AppContent = () => {
     };
   }, []);
 
-  // ADS DISABLED FOR COFFEE CONNECT
   // Handle navigation state changes to show interstitial ads
   const handleNavigationStateChange = (state: any) => {
     if (!state) return;
 
     const currentRoute = state.routes[state.index]?.name;
 
-    // ADS DISABLED - Show interstitial ad occasionally when switching tabs (not every time to avoid annoyance)
+    // Show interstitial ad occasionally when switching tabs (not every time to avoid annoyance)
     // Show ad 30% of the time when changing tabs
-    // if (currentRoute && currentRoute !== previousRoute && isLoaded && Math.random() < 0.3) {
-    //   console.log(`Tab changed from ${previousRoute} to ${currentRoute}, showing interstitial ad`);
-    //   showAd();
-    // }
+    if (currentRoute && currentRoute !== previousRoute && isLoaded && Math.random() < 0.3) {
+      console.log(`Tab changed from ${previousRoute} to ${currentRoute}, showing interstitial ad`);
+      showAd();
+    }
 
     setPreviousRoute(currentRoute);
   };

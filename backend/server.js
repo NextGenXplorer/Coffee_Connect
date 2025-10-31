@@ -318,8 +318,8 @@ app.post('/send-custom-notification', async (req, res) => {
     if (fcmTokens.length > 0) {
       console.log(`📱 Sending custom notification to ${fcmTokens.length} FCM tokens...`);
 
-      // Use provided imageUrl or fallback to default logo
-      const notificationImageUrl = imageUrl || 'https://raw.githubusercontent.com/NextGenXplorer/Reshme_Info/main/assets/reshme_logo.png';
+      // Use provided imageUrl or fallback to Coffee Connect logo
+      const notificationImageUrl = imageUrl || 'https://raw.githubusercontent.com/NextGenXplorer/Coffee_Connect/main/assets/coffee_logo.png';
 
       const fcmMessage = {
         notification: {
@@ -387,8 +387,8 @@ app.post('/send-custom-notification', async (req, res) => {
     if (expoTokens.length > 0) {
       console.log(`📱 Sending custom notification to ${expoTokens.length} Expo tokens...`);
 
-      // Use provided imageUrl or fallback to default logo
-      const notificationImageUrl = imageUrl || 'https://raw.githubusercontent.com/NextGenXplorer/Reshme_Info/main/assets/reshme_logo.png';
+      // Use provided imageUrl or fallback to Coffee Connect logo
+      const notificationImageUrl = imageUrl || 'https://raw.githubusercontent.com/NextGenXplorer/Coffee_Connect/main/assets/coffee_logo.png';
 
       const expoMessage = {
         to: expoTokens,
@@ -515,7 +515,7 @@ app.post('/send-notification', async (req, res) => {
         notification: {
           title: notificationTitle,
           body: notificationBody,
-          imageUrl: 'https://raw.githubusercontent.com/NextGenXplorer/Reshme_Info/main/assets/reshme_logo.png',
+          imageUrl: 'https://raw.githubusercontent.com/NextGenXplorer/Coffee_Connect/main/assets/coffee_logo.png',
         },
         data: {
           screen: 'Market',
@@ -528,7 +528,7 @@ app.post('/send-notification', async (req, res) => {
           notification: {
             color: '#3B82F6',
             sound: 'default',
-            imageUrl: 'https://raw.githubusercontent.com/NextGenXplorer/Reshme_Info/main/assets/reshme_logo.png',
+            imageUrl: 'https://raw.githubusercontent.com/NextGenXplorer/Coffee_Connect/main/assets/coffee_logo.png',
             channelId: 'default',
           },
         },
@@ -540,7 +540,7 @@ app.post('/send-notification', async (req, res) => {
             },
           },
           fcmOptions: {
-            imageUrl: 'https://raw.githubusercontent.com/NextGenXplorer/Reshme_Info/main/assets/reshme_logo.png',
+            imageUrl: 'https://raw.githubusercontent.com/NextGenXplorer/Coffee_Connect/main/assets/coffee_logo.png',
           },
         },
         tokens: fcmTokens,

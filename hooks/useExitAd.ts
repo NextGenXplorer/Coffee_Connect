@@ -13,7 +13,7 @@ import { BackHandler } from 'react-native';
  */
 
 // Production Rewarded Interstitial Ad Unit ID
-const PRODUCTION_AD_UNIT_ID = 'ca-app-pub-5029120740748641/4463077544';
+const PRODUCTION_AD_UNIT_ID = 'ca-app-pub-5029120740748641/8584893600';
 
 // Use test ID in development, production ID in production
 const AD_UNIT_ID = __DEV__ ? TestIds.REWARDED_INTERSTITIAL : PRODUCTION_AD_UNIT_ID;

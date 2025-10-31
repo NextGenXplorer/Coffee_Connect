@@ -29,13 +29,12 @@ interface FilterOptions {
   breed: 'All' | 'CB' | 'BV';
   market: string;
   dateRange: 'today' | 'yesterday' | 'week' | 'all';
-  sortBy: 'market' | 'avgPrice' | 'maxPrice' | 'minPrice' | 'date';
+  sortBy: 'market' | 'maxPrice' | 'minPrice' | 'date';
   sortOrder: 'asc' | 'desc';
 }
 
 interface BreedPriceData {
   breed: string;
-  avgPrice: number;
   maxPrice: number;
   minPrice: number;
   count: number;
@@ -43,7 +42,6 @@ interface BreedPriceData {
 
 interface MarketSummary {
   market: string;
-  avgPrice: number;
   maxPrice: number;
   minPrice: number;
   lotNumbers: string[];
@@ -220,7 +218,6 @@ export default function MarketScreen() {
 
     const summaries: MarketSummary[] = Object.keys(marketGroups).map(marketName => {
       const marketPrices = marketGroups[marketName];
-      const avgPrices = marketPrices.map(p => p.avgPrice).filter(p => p != null);
       const maxPrices = marketPrices.map(p => p.maxPrice).filter(p => p != null);
       const minPrices = marketPrices.map(p => p.minPrice).filter(p => p != null);
 
@@ -239,13 +236,11 @@ export default function MarketScreen() {
 
       const breedPrices: BreedPriceData[] = Object.keys(breedGroups).map(breed => {
         const breedPricesList = breedGroups[breed];
-        const breedAvg = breedPricesList.map(p => p.avgPrice).filter(p => p != null);
         const breedMax = breedPricesList.map(p => p.maxPrice).filter(p => p != null);
         const breedMin = breedPricesList.map(p => p.minPrice).filter(p => p != null);
 
         return {
           breed,
-          avgPrice: breedAvg.length > 0 ? Math.round(breedAvg.reduce((sum, p) => sum + p, 0) / breedAvg.length) : 0,
           maxPrice: breedMax.length > 0 ? Math.max(...breedMax) : 0,
           minPrice: breedMin.length > 0 ? Math.min(...breedMin) : 0,
           count: breedPricesList.length,
@@ -254,10 +249,9 @@ export default function MarketScreen() {
 
       return {
         market: marketName,
-        avgPrice: avgPrices.length > 0 ? Math.round(avgPrices.reduce((sum, price) => sum + price, 0) / avgPrices.length) : 0,
         maxPrice: maxPrices.length > 0 ? Math.max(...maxPrices) : 0,
         minPrice: minPrices.length > 0 ? Math.min(...minPrices) : 0,
-        lotNumbers: [...new Set(marketPrices.map(p => p.lotNumber?.toString() || ''))].filter(Boolean),
+        lotNumbers: [],
         breeds: [...new Set(marketPrices.map(p => p.breed))],
         breedPrices,
         qualities: [...new Set(marketPrices.map(p => p.quality))],
@@ -289,9 +283,6 @@ export default function MarketScreen() {
       switch (filters.sortBy) {
         case 'market':
           compareValue = a.market.localeCompare(b.market);
-          break;
-        case 'avgPrice':
-          compareValue = a.avgPrice - b.avgPrice;
           break;
         case 'maxPrice':
           compareValue = a.maxPrice - b.maxPrice;
@@ -363,7 +354,6 @@ export default function MarketScreen() {
         </Text>
       </View>
       <View style={styles.breedPriceDetails}>
-        <Text style={styles.breedPriceValue}>₹{breedData.avgPrice}</Text>
         <Text style={styles.breedPriceRange}>
           ₹{breedData.minPrice} - ₹{breedData.maxPrice}
         </Text>
@@ -398,14 +388,6 @@ export default function MarketScreen() {
         </View>
         <View style={styles.priceDivider} />
         <View style={styles.priceColumn}>
-          <View style={[styles.priceIconContainer, { backgroundColor: '#3B82F615' }]}>
-            <Ionicons name="analytics" size={16} color="#3B82F6" />
-          </View>
-          <Text style={styles.priceCardLabel}>{t('avgPriceLabel')}</Text>
-          <Text style={styles.avgPriceText}>₹{item.avgPrice}</Text>
-        </View>
-        <View style={styles.priceDivider} />
-        <View style={styles.priceColumn}>
           <View style={[styles.priceIconContainer, { backgroundColor: '#EF444415' }]}>
             <Ionicons name="trending-down" size={16} color="#EF4444" />
           </View>
@@ -417,20 +399,8 @@ export default function MarketScreen() {
       {/* Breed-Specific Prices */}
       {item.breedPrices.length > 0 && (
         <View style={styles.breedPricesSection}>
-          <Text style={styles.breedPricesTitle}>{t('breedPrices') || 'Breed-wise Prices'}</Text>
+          <Text style={styles.breedPricesTitle}>{t('breedPrices') || 'Variety-wise Prices'}</Text>
           {item.breedPrices.map(renderBreedPrice)}
-        </View>
-      )}
-
-      {/* Lot Numbers */}
-      {item.lotNumbers.length > 0 && (
-        <View style={styles.lotSection}>
-          <Ionicons name="cube-outline" size={14} color="#6B7280" />
-          <Text style={styles.lotLabel}>{t('lotNumbersLabel')}:</Text>
-          <Text style={styles.lotText}>
-            {item.lotNumbers.slice(0, 3).join(', ')}
-            {item.lotNumbers.length > 3 && ` +${item.lotNumbers.length - 3}`}
-          </Text>
         </View>
       )}
 
@@ -452,11 +422,11 @@ export default function MarketScreen() {
   const OverviewCard = () => {
     const totalMarkets = marketSummaries.length;
     const totalListings = prices.length;
-    const overallAvgPrice = marketSummaries.length > 0
-      ? Math.round(marketSummaries.reduce((sum, market) => sum + market.avgPrice, 0) / marketSummaries.length)
-      : 0;
     const highestPrice = marketSummaries.length > 0
       ? Math.max(...marketSummaries.map(m => m.maxPrice))
+      : 0;
+    const lowestPrice = marketSummaries.length > 0
+      ? Math.min(...marketSummaries.map(m => m.minPrice).filter(p => p > 0))
       : 0;
 
     return (
@@ -478,18 +448,18 @@ export default function MarketScreen() {
             <Text style={styles.overviewLabel}>{t('totalListings')}</Text>
           </View>
           <View style={styles.overviewStat}>
-            <View style={[styles.overviewIcon, { backgroundColor: '#F59E0B15' }]}>
-              <Ionicons name="analytics" size={20} color="#F59E0B" />
-            </View>
-            <Text style={styles.overviewNumber}>₹{overallAvgPrice}</Text>
-            <Text style={styles.overviewLabel}>{t('avg')}</Text>
-          </View>
-          <View style={styles.overviewStat}>
             <View style={[styles.overviewIcon, { backgroundColor: '#10B98115' }]}>
               <Ionicons name="trending-up" size={20} color="#10B981" />
             </View>
             <Text style={styles.overviewNumber}>₹{highestPrice}</Text>
             <Text style={styles.overviewLabel}>{t('highestPrice')}</Text>
+          </View>
+          <View style={styles.overviewStat}>
+            <View style={[styles.overviewIcon, { backgroundColor: '#EF444415' }]}>
+              <Ionicons name="trending-down" size={20} color="#EF4444" />
+            </View>
+            <Text style={styles.overviewNumber}>₹{lowestPrice}</Text>
+            <Text style={styles.overviewLabel}>{t('lowestPrice')}</Text>
           </View>
         </View>
       </View>

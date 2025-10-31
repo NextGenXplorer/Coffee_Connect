@@ -21,7 +21,7 @@ import NotificationDetailScreen from './NotificationDetailScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
-const READ_NOTIFICATIONS_KEY = '@reshme_read_notifications';
+const READ_NOTIFICATIONS_KEY = '@coffee_read_notifications';
 
 interface NotificationsScreenProps {
   onBack?: () => void;

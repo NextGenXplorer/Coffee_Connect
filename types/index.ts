@@ -5,11 +5,9 @@ export interface CocoonPrice {
   pricePerKg: number;
   minPrice: number;
   maxPrice: number;
-  avgPrice: number;
   lastUpdated: Date;
   expiresAt: Date;
   quality: 'A' | 'B' | 'C';
-  lotNumber: number;
 }
 
 export interface Market {
@@ -31,7 +29,6 @@ export interface PriceStatistics {
   market: string;
   minPrice: number;
   maxPrice: number;
-  avgPrice: number;
   priceCount: number;
   lastUpdated: Date;
 }
@@ -54,9 +51,7 @@ export interface PriceFormData {
   pricePerKg: number;
   minPrice: number;
   maxPrice: number;
-  avgPrice: number;
   quality: 'A' | 'B' | 'C';
-  lotNumber: number;
 }
 
 export interface Notification {

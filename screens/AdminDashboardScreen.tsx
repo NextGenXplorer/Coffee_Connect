@@ -32,7 +32,7 @@ interface AdminDashboardScreenProps {
 interface DashboardStats {
   totalPrices: number;
   todayUpdates: number;
-  avgPrice: number;
+  maxPrice: number;
   marketsCount: number;
 }
 
@@ -49,7 +49,7 @@ export default function AdminDashboardScreen({
   const [stats, setStats] = useState<DashboardStats>({
     totalPrices: 0,
     todayUpdates: 0,
-    avgPrice: 0,
+    maxPrice: 0,
     marketsCount: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -123,8 +123,8 @@ export default function AdminDashboardScreen({
       ).length;
 
       const totalPrices = prices.length;
-      const avgPrice = prices.length > 0
-        ? Math.round(prices.reduce((sum, price) => sum + price.avgPrice, 0) / prices.length)
+      const maxPrice = prices.length > 0
+        ? Math.max(...prices.map(price => price.maxPrice))
         : 0;
 
       const markets = new Set(prices.map(price => price.market));
@@ -133,7 +133,7 @@ export default function AdminDashboardScreen({
       setStats({
         totalPrices,
         todayUpdates,
-        avgPrice,
+        maxPrice,
         marketsCount,
       });
     } catch (error) {
@@ -266,7 +266,7 @@ export default function AdminDashboardScreen({
                 <Text style={[styles.breedText, {
                   color: item.breed === 'CB' ? '#3B82F6' : '#10B981'
                 }]}>
-                  {item.breed}
+                  {t(item.breed === 'CB' ? 'crossBreed' : 'bivoltine')}
                 </Text>
               </View>
               <View style={[styles.qualityBadge, {
@@ -305,15 +305,11 @@ export default function AdminDashboardScreen({
         <View style={styles.priceBody}>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Maximum Price:</Text>
-            <Text style={styles.priceValue}>₹{item.maxPrice}/kg</Text>
-          </View>
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Average Price:</Text>
-            <Text style={[styles.priceValue, styles.priceHighlight]}>₹{item.avgPrice}/kg</Text>
+            <Text style={styles.priceValue}>₹{item.maxPrice}/50kg bag</Text>
           </View>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Minimum Price:</Text>
-            <Text style={styles.priceValue}>₹{item.minPrice}/kg</Text>
+            <Text style={styles.priceValue}>₹{item.minPrice}/50kg bag</Text>
           </View>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Last Updated:</Text>
@@ -399,8 +395,8 @@ export default function AdminDashboardScreen({
             />
             <StatCard
               icon="cash-outline"
-              title="Avg Price"
-              value={`₹${stats.avgPrice}`}
+              title="Max Price"
+              value={`₹${stats.maxPrice}`}
               color="#F59E0B"
             />
             <StatCard

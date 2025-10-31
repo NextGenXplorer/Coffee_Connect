@@ -6,25 +6,25 @@ if (process.env.EAS_BUILD !== 'true') {
 
 module.exports = {
   expo: {
-    name: "ReshmeInfo",
-    slug: "ReshmeInfo",
+    name: "Coffee Connect",
+    slug: "CoffeeConnect",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/reshme_logo.png",
+    icon: "./assets/coffee_logo.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/reshme_logo.png",
+      image: "./assets/coffee_logo.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff"
+      backgroundColor: "#3E2723"
     },
     android: {
-      package: "com.master.reshmeinfo", // Unique Android package name
+      package: "com.master.coffeeconnect", // Unique Android package name
       adaptiveIcon: {
-        foregroundImage: "./assets/reshme_logo.png",
-        backgroundColor: "#ffffff"
+        foregroundImage: "./assets/coffee_logo.png",
+        backgroundColor: "#3E2723"
       },
-      icon: "./assets/reshme_logo.png", // Notification icon
+      icon: "./assets/coffee_logo.png", // Notification icon
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
       googleServicesFile: "./google-services.json",
@@ -36,30 +36,31 @@ module.exports = {
       ]
     },
     notification: {
-      icon: "./assets/reshme_logo.png",
-      color: "#3B82F6",
+      icon: "./assets/coffee_logo.png",
+      color: "#6F4E37",
       androidMode: "default",
-      androidCollapsedTitle: "ReshmeInfo Updates"
+      androidCollapsedTitle: "Coffee Connect Updates"
     },
     plugins: [
       "expo-font",
       [
         "expo-notifications",
         {
-          icon: "./assets/reshme_logo.png",
-          color: "#3B82F6",
+          icon: "./assets/coffee_logo.png",
+          color: "#6F4E37",
           sounds: []
         }
-      ],
-      [
-        "react-native-google-mobile-ads",
-        {
-          androidAppId: "ca-app-pub-5029120740748641~7524355155", // Production AdMob App ID
-        }
       ]
+      // ADS DISABLED FOR COFFEE CONNECT
+      // [
+      //   "react-native-google-mobile-ads",
+      //   {
+      //     androidAppId: "ca-app-pub-5029120740748641~7524355155", // Production AdMob App ID
+      //   }
+      // ]
     ],
     web: {
-      favicon: "./assets/reshme_logo.png"
+      favicon: "./assets/coffee_logo.png"
     },
     extra: {
       // Firebase Environment Variables
@@ -86,9 +87,9 @@ module.exports = {
       EXPO_PUBLIC_ADMIN_ROLE_3: process.env.EXPO_PUBLIC_ADMIN_ROLE_3,
       EXPO_PUBLIC_ADMIN_MARKET_3: process.env.EXPO_PUBLIC_ADMIN_MARKET_3,
 
-      // EAS Project ID (required for dynamic configs)
+      // EAS Project ID for Coffee Connect
       eas: {
-        projectId: "2cb9f6e5-78a4-478c-a133-7c87876c655c"
+        projectId: "b5229c37-f73f-4407-a118-90083cb95221"
       }
     }
   }

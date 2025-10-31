@@ -144,7 +144,7 @@ export default function AdminLoginScreen({ onLoginSuccess, onCancel }: AdminLogi
           <View style={styles.logoContainer}>
             <Ionicons name="shield-checkmark" size={60} color="#3B82F6" />
           </View>
-          <Text style={styles.logoTitle}>Reshme Info</Text>
+          <Text style={styles.logoTitle}>Coffee Connect</Text>
           <Text style={styles.logoSubtitle}>Administrative Portal</Text>
         </View>
 

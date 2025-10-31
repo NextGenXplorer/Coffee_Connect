@@ -130,7 +130,7 @@ export default function AboutScreen({ setShowAdminPanel }: { setShowAdminPanel: 
         <View style={styles.missionSection}>
           <View style={styles.logoContainer}>
             <Image
-              source={require('../assets/reshme_logo.png')}
+              source={require('../assets/coffee_logo.png')}
               style={styles.largeLogo}
               resizeMode="contain"
             />

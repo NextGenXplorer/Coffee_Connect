@@ -11,9 +11,10 @@ import * as Notifications from 'expo-notifications';
 import { db } from './firebase.config';
 import { doc, setDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useInterstitialAd } from './hooks/useInterstitialAd';
-import { useExitAd } from './hooks/useExitAd';
-import MobileAds from 'react-native-google-mobile-ads';
+// ADS DISABLED FOR COFFEE CONNECT
+// import { useInterstitialAd } from './hooks/useInterstitialAd';
+// import { useExitAd } from './hooks/useExitAd';
+// import MobileAds from 'react-native-google-mobile-ads';
 
 // Create context for notifications navigation
 const NotificationsContext = createContext<{
@@ -121,7 +122,7 @@ async function registerForPushNotificationsAsync(): Promise<string | undefined> 
   }
 }
 
-const FIRST_LAUNCH_KEY = '@reshme_first_launch_completed';
+const FIRST_LAUNCH_KEY = '@coffee_first_launch_completed';
 
 const AppContent = () => {
   const { t } = useTranslation();
@@ -155,23 +156,24 @@ const AppContent = () => {
     checkFirstLaunch();
   }, []);
 
+  // ADS DISABLED FOR COFFEE CONNECT
   // Initialize Google Mobile Ads
-  useEffect(() => {
-    MobileAds()
-      .initialize()
-      .then(adapterStatuses => {
-        console.log('AdMob initialized:', adapterStatuses);
-      })
-      .catch(error => {
-        console.error('AdMob initialization error:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   MobileAds()
+  //     .initialize()
+  //     .then(adapterStatuses => {
+  //       console.log('AdMob initialized:', adapterStatuses);
+  //     })
+  //     .catch(error => {
+  //       console.error('AdMob initialization error:', error);
+  //     });
+  // }, []);
 
   // Interstitial ad hook for tab navigation
-  const { showAd, isLoaded } = useInterstitialAd();
+  // const { showAd, isLoaded } = useInterstitialAd();
 
   // Exit ad hook - shows rewarded interstitial when user presses back button
-  useExitAd({ enabled: true });
+  // useExitAd({ enabled: true });
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => {
@@ -208,18 +210,19 @@ const AppContent = () => {
     };
   }, []);
 
+  // ADS DISABLED FOR COFFEE CONNECT
   // Handle navigation state changes to show interstitial ads
   const handleNavigationStateChange = (state: any) => {
     if (!state) return;
 
     const currentRoute = state.routes[state.index]?.name;
 
-    // Show interstitial ad occasionally when switching tabs (not every time to avoid annoyance)
+    // ADS DISABLED - Show interstitial ad occasionally when switching tabs (not every time to avoid annoyance)
     // Show ad 30% of the time when changing tabs
-    if (currentRoute && currentRoute !== previousRoute && isLoaded && Math.random() < 0.3) {
-      console.log(`Tab changed from ${previousRoute} to ${currentRoute}, showing interstitial ad`);
-      showAd();
-    }
+    // if (currentRoute && currentRoute !== previousRoute && isLoaded && Math.random() < 0.3) {
+    //   console.log(`Tab changed from ${previousRoute} to ${currentRoute}, showing interstitial ad`);
+    //   showAd();
+    // }
 
     setPreviousRoute(currentRoute);
   };
@@ -228,8 +231,8 @@ const AppContent = () => {
     <NotificationsContext.Provider value={{ openNotifications: () => setShowNotificationsScreen(true) }}>
       {/* Show loading spinner while checking first launch */}
       {isCheckingFirstLaunch ? (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#10B981" />
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF8E7', justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#6F4E37" />
           <StatusBar style="dark" />
         </SafeAreaView>
       ) : showLanguageSelection ? (
@@ -249,7 +252,7 @@ const AppContent = () => {
         </SafeAreaView>
       ) : (
         <NavigationContainer onStateChange={handleNavigationStateChange}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF8E7' }}>
 
           <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -268,12 +271,12 @@ const AppContent = () => {
 
               return <Ionicons name={iconName as any} size={size} color={color} />;
             },
-            tabBarActiveTintColor: '#3B82F6',
-            tabBarInactiveTintColor: '#9CA3AF',
+            tabBarActiveTintColor: '#6F4E37',
+            tabBarInactiveTintColor: '#A0826D',
             tabBarStyle: {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: '#FFF8E7',
               borderTopWidth: 1,
-              borderTopColor: '#E5E7EB',
+              borderTopColor: '#D4A574',
               paddingTop: 8,
               paddingBottom: insets.bottom > 0 ? insets.bottom : 8,
               height: 70 + insets.bottom,

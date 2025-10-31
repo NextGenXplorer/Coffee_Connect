@@ -45,7 +45,7 @@ export default function HomeScreen() {
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
   const breeds = ['all', 'CB', 'BV'];
-  const markets = ['all', 'Ramanagara', 'Kollegala', 'Kanakapura', 'Siddalagatta', 'Kolar'];
+  const markets = ['all', 'Madikeri', 'Virajpete', 'Kushalnagar', 'Somvarpete', 'Shanivarasanthe', 'Sakleshpura'];
 
   const fetchPrices = async (dateFilter?: Date) => {
     try {
@@ -268,9 +268,7 @@ export default function HomeScreen() {
           breed: breedText,
           grade: item.quality,
           market: marketText,
-          lot: item.lotNumber,
           maxPrice: item.maxPrice,
-          avgPrice: item.avgPrice,
           minPrice: item.minPrice
         });
       } else {
@@ -279,9 +277,7 @@ export default function HomeScreen() {
           breed: breedText,
           grade: item.quality,
           market: marketText,
-          lot: item.lotNumber,
           maxPrice: item.maxPrice,
-          avgPrice: item.avgPrice,
           minPrice: item.minPrice
         });
       }
@@ -342,7 +338,7 @@ export default function HomeScreen() {
             <View style={styles.ultraModernCardHeader}>
               <View style={styles.breedSection}>
                 <View style={styles.breedIconContainer}>
-                  <Ionicons name="leaf" size={18} color="#10B981" />
+                  <Ionicons name="cafe" size={18} color="#6B4423" />
                 </View>
                 <View style={styles.breedInfo}>
                   <Text style={styles.ultraModernBreedText}>{t(`breed_${item.breed}` as any, item.breed)}</Text>
@@ -375,15 +371,11 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            {/* Market and Lot badges */}
+            {/* Market badge */}
             <View style={styles.marketLotsSection}>
               <View style={styles.ultraModernMarketBadge}>
                 <Ionicons name="location" size={10} color="#5B21B6" />
                 <Text style={styles.ultraModernMarketText}>{t(`market_${item.market}` as any, item.market)}</Text>
-              </View>
-              <View style={styles.lotNumberBadge}>
-                <Ionicons name="apps" size={10} color="#92400E" />
-                <Text style={styles.lotNumberText}>{t('lot')}: {item.lotNumber}</Text>
               </View>
             </View>
 
@@ -405,15 +397,6 @@ export default function HomeScreen() {
                 <View style={styles.tableStatusCell}>
                   <Ionicons name="trending-up" size={14} color="#10B981" />
                   <Text style={[styles.tableCellStatus, { color: '#10B981' }]}>{t('high')}</Text>
-                </View>
-              </View>
-
-              <View style={styles.tableRow}>
-                <Text style={styles.tableCellType}>{t('average')}</Text>
-                <Text style={styles.tableCellPrice}>₹{item.avgPrice}</Text>
-                <View style={styles.tableStatusCell}>
-                  <Ionicons name="analytics" size={14} color="#6366F1" />
-                  <Text style={[styles.tableCellStatus, { color: '#6366F1' }]}>{t('avg')}</Text>
                 </View>
               </View>
 
@@ -450,7 +433,7 @@ export default function HomeScreen() {
             <View style={styles.loadingSpinner}>
               <View style={styles.loadingSpinnerGradient}>
                 <Image
-                  source={require('../assets/reshme_logo.png')}
+                  source={require('../assets/coffee_logo.png')}
                   style={styles.loadingLogoImage}
                   resizeMode="contain"
                 />
@@ -519,7 +502,7 @@ export default function HomeScreen() {
                     title={t(`breed_${item}`)}
                     isSelected={selectedBreed === item}
                     onPress={() => setSelectedBreed(item)}
-                    icon={item === 'all' ? 'grid' : 'leaf'}
+                    icon={item === 'all' ? 'grid' : 'cafe'}
                   />
                 ))}
               </ScrollView>
@@ -815,7 +798,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
+    backgroundColor: '#FEF3C7',
   },
   breedInfo: {
     marginLeft: 16,
@@ -863,21 +846,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#5B21B6',
-  },
-  lotNumberBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    gap: 4,
-    backgroundColor: '#FEF3C7',
-    marginTop: 8,
-  },
-  lotNumberText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#92400E',
   },
 
   // Price Table

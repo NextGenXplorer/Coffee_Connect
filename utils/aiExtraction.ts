@@ -7,26 +7,13 @@ const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemi
 export interface ExtractedMarketData {
   market: string;
   date: string;
-  mixedBreed?: {
-    lots: number;
-    totalWeight: number;
+  arabicaParchment?: {
     maxPrice: number;
     minPrice: number;
-    avgPrice: number;
   };
-  bivoltine?: {
-    lots: number;
-    totalWeight: number;
+  arabicaCherry?: {
     maxPrice: number;
     minPrice: number;
-    avgPrice: number;
-  };
-  cbGold?: {
-    lots: number;
-    quantity: number;
-    maxPrice: number;
-    minPrice: number;
-    avgPrice: number;
   };
 }
 
@@ -53,7 +40,7 @@ export async function extractMarketDataWithAI(
     }
 
     const prompt = `
-You are a data extraction assistant for cocoon market transactions. Extract structured data from the following text which may be in Kannada or English.
+You are a data extraction assistant for coffee depot price transactions. Extract structured data from the following text which may be in Kannada or English.
 
 Text to analyze:
 """
@@ -63,44 +50,32 @@ ${inputText}
 Extract the following information and return ONLY a valid JSON object (no markdown, no code blocks):
 
 {
-  "market": "market name (e.g., Kanakapura, Kollegala, Ramanagara)",
+  "market": "depot name (e.g., Madikeri, Virajpete, Kushalnagar, Somvarpete, Shanivarasanthe, Sakleshpura)",
   "date": "date in format DD-MM-YYYY",
-  "mixedBreed": {
-    "lots": number (ತಂಡಗಳು/lots for ಮಿಶ್ರ/mixed/CB),
-    "totalWeight": number (ಒಟ್ಟು ತೂಕ/total weight in kg),
-    "maxPrice": number (ಹೆಚ್ಚು ದರ/max price),
-    "minPrice": number (ಕಡಿಮೆ ದರ/min price),
-    "avgPrice": number (ಸರಾಸರಿ ದರ/average price)
+  "arabicaParchment": {
+    "maxPrice": number (ಹೆಚ್ಚು ದರ/max price per 50kg bag),
+    "minPrice": number (ಕಡಿಮೆ ದರ/min price per 50kg bag)
   },
-  "bivoltine": {
-    "lots": number (ತಂಡಗಳು/lots for ದ್ವಿತಳಿ/bivoltine/BV),
-    "totalWeight": number (ಒಟ್ಟು ತೂಕ/total weight in kg),
-    "maxPrice": number (ಹೆಚ್ಚು ದರ/max price),
-    "minPrice": number (ಕಡಿಮೆ ದರ/min price),
-    "avgPrice": number (ಸರಾಸರಿ ದರ/average price)
-  },
-  "cbGold": {
-    "lots": number,
-    "quantity": number (QTY in kg),
-    "maxPrice": number (MAX),
-    "minPrice": number (MIN),
-    "avgPrice": number (AVG)
+  "arabicaCherry": {
+    "maxPrice": number (ಹೆಚ್ಚು ದರ/max price per 50kg bag),
+    "minPrice": number (ಕಡಿಮೆ ದರ/min price per 50kg bag)
   }
 }
 
 Notes:
-- **IMPORTANT: Market names must ALWAYS be in English - match EXACTLY these spellings**
-- Translate Kannada market names to English (exact spelling required):
-  * ಕನಕಪುರ → Kanakapura
-  * ಕೊಳ್ಳೇಗಾಲ/ಕೊಲ್ಲೇಗಾಲ/kollegal → Kollegala
-  * ರಾಮನಗರ → Ramanagara
-  * ಶಿಡ್ಲಘಟ್ಟ/ಸಿದ್ದಲಾಘಟ್ಟ → Siddalagatta
-  * ಕೋಲಾರ → Kolar
-- Use EXACT capitalization as shown above (note: Siddalagatta has double 'd')
-- ಮಿಶ್ರ = Mixed/CB (Cross Breed)
-- ದ್ವಿತಳಿ = Bivoltine/BV
-- CB GOLD is a separate category
-- If a category is not present in the text, omit that object
+- **IMPORTANT: Depot names must ALWAYS be in English - match EXACTLY these spellings**
+- Translate Kannada depot names to English (exact spelling required):
+  * ಮಡಿಕೇರಿ → Madikeri
+  * ವಿರಾಜಪೇಟೆ → Virajpete
+  * ಕುಶಾಲನಗರ → Kushalnagar
+  * ಸೋಮವಾರಪೇಟೆ → Somvarpete
+  * ಶನಿವಾರಸಂತೆ → Shanivarasanthe
+  * ಸಕಲೇಶಪುರ → Sakleshpura
+- Use EXACT capitalization as shown above
+- CB = Arabica Parchment
+- BV = Arabica Cherry
+- Prices are per 50 kilogram bag, not per kilogram
+- If a variety is not present in the text, omit that object
 - Return ONLY the JSON object, no explanations or markdown
 `;
 
@@ -140,45 +115,29 @@ Notes:
     // Convert to PriceFormData entries
     const priceEntries: PriceFormData[] = [];
 
-    // Add Mixed/CB entry if present
-    if (extractedData.mixedBreed) {
+    // Add Arabica Parchment/CB entry if present
+    if (extractedData.arabicaParchment) {
       priceEntries.push({
         breed: 'CB',
         market: extractedData.market,
-        pricePerKg: extractedData.mixedBreed.avgPrice,
-        minPrice: extractedData.mixedBreed.minPrice,
-        maxPrice: extractedData.mixedBreed.maxPrice,
-        avgPrice: extractedData.mixedBreed.avgPrice,
+        pricePerKg: extractedData.arabicaParchment.maxPrice,
+        minPrice: extractedData.arabicaParchment.minPrice,
+        maxPrice: extractedData.arabicaParchment.maxPrice,
         quality: 'A', // Default quality, admin can change
-        lotNumber: extractedData.mixedBreed.lots,
+        lotNumber: 0, // Not used for coffee
       });
     }
 
-    // Add Bivoltine/BV entry if present
-    if (extractedData.bivoltine) {
+    // Add Arabica Cherry/BV entry if present
+    if (extractedData.arabicaCherry) {
       priceEntries.push({
         breed: 'BV',
         market: extractedData.market,
-        pricePerKg: extractedData.bivoltine.avgPrice,
-        minPrice: extractedData.bivoltine.minPrice,
-        maxPrice: extractedData.bivoltine.maxPrice,
-        avgPrice: extractedData.bivoltine.avgPrice,
+        pricePerKg: extractedData.arabicaCherry.maxPrice,
+        minPrice: extractedData.arabicaCherry.minPrice,
+        maxPrice: extractedData.arabicaCherry.maxPrice,
         quality: 'A', // Default quality, admin can change
-        lotNumber: extractedData.bivoltine.lots,
-      });
-    }
-
-    // Add CB Gold entry if present
-    if (extractedData.cbGold) {
-      priceEntries.push({
-        breed: 'CB',
-        market: extractedData.market,
-        pricePerKg: extractedData.cbGold.avgPrice,
-        minPrice: extractedData.cbGold.minPrice,
-        maxPrice: extractedData.cbGold.maxPrice,
-        avgPrice: extractedData.cbGold.avgPrice,
-        quality: 'A', // Gold is typically high quality
-        lotNumber: extractedData.cbGold.lots,
+        lotNumber: 0, // Not used for coffee
       });
     }
 
@@ -198,39 +157,49 @@ Notes:
 }
 
 /**
- * Normalize market names to English
+ * Normalize depot names to English
  */
 function normalizeMarketName(marketName: string): string {
-  // Market names matching translation files (en.json lines 95-99)
+  // Coffee depot names matching translation files
   const marketMap: { [key: string]: string } = {
-    // Kanakapura
-    'ಕನಕಪುರ': 'Kanakapura',
-    'kanakapura': 'Kanakapura',
-    'KANAKAPURA': 'Kanakapura',
-    // Kollegala
-    'ಕೊಳ್ಳೇಗಾಲ': 'Kollegala',
-    'ಕೊಲ್ಲೇಗಾಲ': 'Kollegala',
-    'kollegal': 'Kollegala',
-    'kollegala': 'Kollegala',
-    'KOLLEGAL': 'Kollegala',
-    'KOLLEGALA': 'Kollegala',
-    // Ramanagara
-    'ರಾಮನಗರ': 'Ramanagara',
-    'ramanagara': 'Ramanagara',
-    'RAMANAGARA': 'Ramanagara',
-    // Siddalagatta (note the spelling - matches translation key)
-    'ಶಿಡ್ಲಘಟ್ಟ': 'Siddalagatta',
-    'ಸಿದ್ದಲಾಘಟ್ಟ': 'Siddalagatta',
-    'sidlaghatta': 'Siddalagatta',
-    'siddalagatta': 'Siddalagatta',
-    'SIDLAGHATTA': 'Siddalagatta',
-    'SIDDALAGATTA': 'Siddalagatta',
-    'Sidlaghatta': 'Siddalagatta',
-    'Siddalagatta': 'Siddalagatta',
-    // Kolar
-    'ಕೋಲಾರ': 'Kolar',
-    'kolar': 'Kolar',
-    'KOLAR': 'Kolar',
+    // Madikeri
+    'ಮಡಿಕೇರಿ': 'Madikeri',
+    'madikeri': 'Madikeri',
+    'MADIKERI': 'Madikeri',
+    'Madikeri': 'Madikeri',
+    // Virajpete
+    'ವಿರಾಜಪೇಟೆ': 'Virajpete',
+    'virajpete': 'Virajpete',
+    'VIRAJPETE': 'Virajpete',
+    'Virajpete': 'Virajpete',
+    'virajapet': 'Virajpete',
+    'VIRAJAPET': 'Virajpete',
+    // Kushalnagar
+    'ಕುಶಾಲನಗರ': 'Kushalnagar',
+    'kushalnagar': 'Kushalnagar',
+    'KUSHALNAGAR': 'Kushalnagar',
+    'Kushalnagar': 'Kushalnagar',
+    // Somvarpete
+    'ಸೋಮವಾರಪೇಟೆ': 'Somvarpete',
+    'somvarpete': 'Somvarpete',
+    'SOMVARPETE': 'Somvarpete',
+    'Somvarpete': 'Somvarpete',
+    'somwarpet': 'Somvarpete',
+    'SOMWARPET': 'Somvarpete',
+    // Shanivarasanthe
+    'ಶನಿವಾರಸಂತೆ': 'Shanivarasanthe',
+    'shanivarasanthe': 'Shanivarasanthe',
+    'SHANIVARASANTHE': 'Shanivarasanthe',
+    'Shanivarasanthe': 'Shanivarasanthe',
+    'shanivarasante': 'Shanivarasanthe',
+    'SHANIVARASANTE': 'Shanivarasanthe',
+    // Sakleshpura
+    'ಸಕಲೇಶಪುರ': 'Sakleshpura',
+    'sakleshpura': 'Sakleshpura',
+    'SAKLESHPURA': 'Sakleshpura',
+    'Sakleshpura': 'Sakleshpura',
+    'sakleshpur': 'Sakleshpura',
+    'SAKLESHPUR': 'Sakleshpura',
   };
 
   const trimmed = marketName.trim();
@@ -259,38 +228,26 @@ export function validateExtractedData(data: ExtractedMarketData): {
     errors.push('Date is required');
   }
 
-  // Check if at least one breed data exists
-  if (!data.mixedBreed && !data.bivoltine && !data.cbGold) {
-    errors.push('At least one breed data (Mixed, Bivoltine, or CB Gold) is required');
+  // Check if at least one variety data exists
+  if (!data.arabicaParchment && !data.arabicaCherry) {
+    errors.push('At least one coffee variety data (Arabica Parchment or Arabica Cherry) is required');
   }
 
-  // Validate mixed breed data if present
-  if (data.mixedBreed) {
-    if (data.mixedBreed.lots <= 0) errors.push('Mixed breed lots must be greater than 0');
-    if (data.mixedBreed.minPrice <= 0) errors.push('Mixed breed min price must be greater than 0');
-    if (data.mixedBreed.maxPrice <= 0) errors.push('Mixed breed max price must be greater than 0');
-    if (data.mixedBreed.minPrice >= data.mixedBreed.maxPrice) {
-      errors.push('Mixed breed max price must be greater than min price');
+  // Validate Arabica Parchment data if present
+  if (data.arabicaParchment) {
+    if (data.arabicaParchment.minPrice <= 0) errors.push('Arabica Parchment min price must be greater than 0');
+    if (data.arabicaParchment.maxPrice <= 0) errors.push('Arabica Parchment max price must be greater than 0');
+    if (data.arabicaParchment.minPrice >= data.arabicaParchment.maxPrice) {
+      errors.push('Arabica Parchment max price must be greater than min price');
     }
   }
 
-  // Validate bivoltine data if present
-  if (data.bivoltine) {
-    if (data.bivoltine.lots <= 0) errors.push('Bivoltine lots must be greater than 0');
-    if (data.bivoltine.minPrice <= 0) errors.push('Bivoltine min price must be greater than 0');
-    if (data.bivoltine.maxPrice <= 0) errors.push('Bivoltine max price must be greater than 0');
-    if (data.bivoltine.minPrice >= data.bivoltine.maxPrice) {
-      errors.push('Bivoltine max price must be greater than min price');
-    }
-  }
-
-  // Validate CB Gold data if present
-  if (data.cbGold) {
-    if (data.cbGold.lots <= 0) errors.push('CB Gold lots must be greater than 0');
-    if (data.cbGold.minPrice <= 0) errors.push('CB Gold min price must be greater than 0');
-    if (data.cbGold.maxPrice <= 0) errors.push('CB Gold max price must be greater than 0');
-    if (data.cbGold.minPrice >= data.cbGold.maxPrice) {
-      errors.push('CB Gold max price must be greater than min price');
+  // Validate Arabica Cherry data if present
+  if (data.arabicaCherry) {
+    if (data.arabicaCherry.minPrice <= 0) errors.push('Arabica Cherry min price must be greater than 0');
+    if (data.arabicaCherry.maxPrice <= 0) errors.push('Arabica Cherry max price must be greater than 0');
+    if (data.arabicaCherry.minPrice >= data.arabicaCherry.maxPrice) {
+      errors.push('Arabica Cherry max price must be greater than min price');
     }
   }
 

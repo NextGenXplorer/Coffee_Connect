@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({
       <View style={styles.leftComponent}>
         {leftComponent !== undefined ? leftComponent : (
           <Image
-            source={require('../assets/reshme_logo.png')}
+            source={require('../assets/coffee_logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingBottom: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFF8E7',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: '#D4A574',
   },
   leftComponent: {
     width: 40,
@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#3E2723',
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 12,
-    color: '#6B7280',
+    color: '#6F4E37',
     marginTop: 2,
     textAlign: 'center',
   },

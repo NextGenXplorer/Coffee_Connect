@@ -137,9 +137,11 @@ export default function StatsScreen() {
       };
     }
 
-    const avgPrice = Math.round(dayPrices.reduce((sum, price) => sum + price.avgPrice, 0) / dayPrices.length);
-    const highestPrice = Math.max(...dayPrices.map(p => p.maxPrice));
-    const lowestPrice = Math.min(...dayPrices.map(p => p.minPrice));
+    const maxPrices = dayPrices.map(p => p.maxPrice);
+    const minPrices = dayPrices.map(p => p.minPrice);
+    const avgPrice = Math.round((maxPrices.reduce((sum, p) => sum + p, 0) + minPrices.reduce((sum, p) => sum + p, 0)) / (dayPrices.length * 2));
+    const highestPrice = Math.max(...maxPrices);
+    const lowestPrice = Math.min(...minPrices);
     const totalMarkets = new Set(dayPrices.map(p => p.market)).size;
     const totalBreeds = new Set(dayPrices.map(p => p.breed)).size;
     const priceRange = highestPrice - lowestPrice;
@@ -150,7 +152,7 @@ export default function StatsScreen() {
       if (!marketPrices[price.market]) {
         marketPrices[price.market] = [];
       }
-      marketPrices[price.market].push(price.avgPrice);
+      marketPrices[price.market].push((price.maxPrice + price.minPrice) / 2);
     });
 
     let marketLeader = 'N/A';
@@ -369,7 +371,9 @@ export default function StatsScreen() {
                       <Text style={[styles.overviewLabel, isSmallScreen && styles.overviewLabelSmall]} numberOfLines={2}>{t('priceRange')}</Text>
                     </View>
                     <View style={[styles.overviewCard, { width: (width - (horizontalPadding * 2) - cardSpacing) / 2 }]}>
-                      <Text style={[styles.overviewNumber, isSmallScreen && styles.overviewNumberSmall]} numberOfLines={1} adjustsFontSizeToFit>{stats.marketLeader}</Text>
+                      <Text style={[styles.overviewNumber, isSmallScreen && styles.overviewNumberSmall]} numberOfLines={1} adjustsFontSizeToFit>
+                        {stats.marketLeader !== 'N/A' ? t(`market_${stats.marketLeader}` as any, stats.marketLeader) : stats.marketLeader}
+                      </Text>
                       <Text style={[styles.overviewLabel, isSmallScreen && styles.overviewLabelSmall]} numberOfLines={2}>{t('topMarket')}</Text>
                     </View>
                   </View>
@@ -384,7 +388,7 @@ export default function StatsScreen() {
                       {marketDistribution.map((item, index) => (
                         <DistributionBar
                           key={item.market}
-                          label={item.market}
+                          label={t(`market_${item.market}` as any, item.market)}
                           percentage={item.percentage}
                           color={['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444'][index % 5]}
                         />
@@ -402,7 +406,7 @@ export default function StatsScreen() {
                       {breedDistribution.map((item, index) => (
                         <DistributionBar
                           key={item.breed}
-                          label={item.breed}
+                          label={t(`breed_${item.breed}` as any, item.breed)}
                           percentage={item.percentage}
                           color={['#8B5CF6', '#06B6D4', '#84CC16'][index % 3]}
                         />

@@ -38,13 +38,11 @@ export default function AdminPriceFormScreen({
 
   const [formData, setFormData] = useState<PriceFormData>({
     breed: 'CB',
-    market: user.market === 'all' ? 'Ramanagara' : user.market,
+    market: user.market === 'all' ? 'Madikeri' : user.market,
     pricePerKg: 0,
     minPrice: 0,
     maxPrice: 0,
-    avgPrice: 0,
     quality: 'A',
-    lotNumber: 0,
   });
 
   const availableMarkets = adminAuth.getAvailableMarkets(user);
@@ -57,9 +55,7 @@ export default function AdminPriceFormScreen({
         pricePerKg: priceToEdit.pricePerKg,
         minPrice: priceToEdit.minPrice,
         maxPrice: priceToEdit.maxPrice,
-        avgPrice: priceToEdit.avgPrice,
         quality: priceToEdit.quality,
-        lotNumber: priceToEdit.lotNumber || 0,
       });
     }
   }, [priceToEdit]);
@@ -95,14 +91,6 @@ export default function AdminPriceFormScreen({
 
     if (formData.minPrice >= formData.maxPrice) {
       newErrors.maxPrice = 'Maximum price must be greater than minimum price';
-    }
-
-    if (formData.avgPrice <= 0) {
-      newErrors.avgPrice = 'Average price must be greater than 0';
-    }
-
-    if (formData.lotNumber <= 0) {
-      newErrors.lotNumber = 'Lot number must be greater than 0';
     }
 
     if (!adminAuth.hasMarketPermission(user, formData.market)) {
@@ -218,9 +206,7 @@ export default function AdminPriceFormScreen({
       formData.pricePerKg !== priceToEdit.pricePerKg ||
       formData.minPrice !== priceToEdit.minPrice ||
       formData.maxPrice !== priceToEdit.maxPrice ||
-      formData.avgPrice !== priceToEdit.avgPrice ||
-      formData.quality !== priceToEdit.quality ||
-      formData.lotNumber !== priceToEdit.lotNumber
+      formData.quality !== priceToEdit.quality
     );
   };
 
@@ -330,26 +316,6 @@ export default function AdminPriceFormScreen({
             </View>
           </View>
 
-          {/* Lot Number */}
-          <View style={styles.inputSection}>
-            <Text style={styles.inputLabel}>{t('lotNumberRequired')}</Text>
-            <View style={[styles.inputWrapper, errors.lotNumber && styles.inputError]}>
-              <Ionicons name="apps-outline" size={20} color="#6B7280" />
-              <TextInput
-                style={styles.textInput}
-                value={formData.lotNumber.toString()}
-                onChangeText={(text) => updateField('lotNumber', parseInt(text, 10) || 0)}
-                placeholder={t('enterLotNumber')}
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-                editable={!loading}
-              />
-            </View>
-            {errors.lotNumber && (
-              <Text style={styles.errorText}>{errors.lotNumber}</Text>
-            )}
-          </View>
-
           {/* Price Per Kg */}
           <View style={styles.inputSection}>
             <Text style={styles.inputLabel}>{t('currentPricePerKg')}</Text>
@@ -411,26 +377,6 @@ export default function AdminPriceFormScreen({
             </View>
           </View>
 
-          {/* Average Price (Auto-calculated) */}
-          <View style={styles.inputSection}>
-            <Text style={styles.inputLabel}>{t('averagePrice')}</Text>
-            <View style={[styles.inputWrapper, errors.avgPrice && styles.inputError]}>
-              <Ionicons name="calculator-outline" size={20} color="#6B7280" />
-              <TextInput
-                style={styles.textInput}
-                value={formData.avgPrice.toString()}
-                onChangeText={(text) => updateField('avgPrice', parseFloat(text) || 0)}
-                placeholder={t('enterAveragePrice')}
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-                editable={!loading}
-              />
-            </View>
-            {errors.avgPrice && (
-              <Text style={styles.errorText}>{errors.avgPrice}</Text>
-            )}
-          </View>
-
           {/* Summary Card */}
           <View style={styles.summaryCard}>
             <Text style={styles.summaryTitle}>{t('priceSummary')}</Text>
@@ -440,26 +386,16 @@ export default function AdminPriceFormScreen({
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>{t('breedLabel')}</Text>
-              <Text style={styles.summaryValue}>{formData.breed}</Text>
+              <Text style={styles.summaryValue}>{t(formData.breed === 'CB' ? 'crossBreed' : 'bivoltine')}</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>{t('qualityLabel')}</Text>
               <Text style={styles.summaryValue}>Grade {formData.quality}</Text>
             </View>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>{t('lotNumberLabel')}</Text>
-              <Text style={styles.summaryValue}>{formData.lotNumber}</Text>
-            </View>
-            <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>{t('priceRangeLabel')}</Text>
               <Text style={styles.summaryValue}>
                 ₹{formData.minPrice} - ₹{formData.maxPrice}
-              </Text>
-            </View>
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>{t('averagePriceLabel')}</Text>
-              <Text style={[styles.summaryValue, styles.summaryHighlight]}>
-                ₹{formData.avgPrice}/kg
               </Text>
             </View>
           </View>

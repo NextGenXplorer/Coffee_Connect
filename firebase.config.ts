@@ -32,8 +32,8 @@ export { db };
 
 // Firestore collection names
 export const COLLECTIONS = {
-  COCOON_PRICES: 'cocoonPrices',
+  COCOON_PRICES: 'coffeePrices', // Coffee prices collection
   MARKETS: 'markets',
-  BREEDS: 'breeds',
+  BREEDS: 'varieties', // Coffee varieties
   NOTIFICATIONS: 'notifications'
 } as const;

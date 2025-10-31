@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1021212352672",
-    "project_id": "reshmeinfo",
-    "storage_bucket": "reshmeinfo.firebasestorage.app"
+    "project_number": "113940863679",
+    "project_id": "coffeeconnect-2d910",
+    "storage_bucket": "coffeeconnect-2d910.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1021212352672:android:83e65ebb40f9e9272869c5",
+        "mobilesdk_app_id": "1:113940863679:android:e38aa0533dc93e5527440a",
         "android_client_info": {
-          "package_name": "com.master.reshmeinfo"
+          "package_name": "com.master.coffeeconnect"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBVNY-dVGpsf3NTMmGfgvRLoObZ3fnQ1K8"
+          "current_key": "AIzaSyAE_pb6a537uGxgV2Wncn8hM-m_bha7PU8"
         }
       ],
       "services": {

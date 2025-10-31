@@ -279,11 +279,11 @@ export class AdminAuthService {
   // Get all available markets for user
   getAvailableMarkets(user: AdminUser): string[] {
     if (user.role === 'super_admin') {
-      return ['Ramanagara', 'Kollegala', 'Kanakapura', 'Siddalagatta', 'Kolar'];
+      return ['Madikeri', 'Virajpete', 'Kushalnagar', 'Somvarpete', 'Shanivarasanthe', 'Sakleshpura'];
     }
 
     if (user.role === 'market_admin') {
-      return user.market === 'all' ? ['Ramanagara', 'Kollegala', 'Kanakapura', 'Siddalagatta', 'Kolar'] : [user.market];
+      return user.market === 'all' ? ['Madikeri', 'Virajpete', 'Kushalnagar', 'Somvarpete', 'Shanivarasanthe', 'Sakleshpura'] : [user.market];
     }
 
     return [];

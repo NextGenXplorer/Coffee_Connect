@@ -69,22 +69,22 @@ export default function LanguageSelectionScreen({ onComplete }: LanguageSelectio
             isSmallScreen && styles.logoContainerSmall
           ]}>
             <Ionicons
-              name="leaf"
+              name="cafe"
               size={isSmallScreen ? 40 : 60}
-              color="#10B981"
+              color="#6B4423"
             />
           </View>
           <Text style={[
             styles.appName,
             isSmallScreen && styles.appNameSmall
           ]}>
-            Reshme Info
+            Coffee Connect
           </Text>
           <Text style={[
             styles.subtitle,
             isSmallScreen && styles.subtitleSmall
           ]}>
-            Cocoon Market Price Information
+            Coffee Depot Price Information
           </Text>
         </View>
 

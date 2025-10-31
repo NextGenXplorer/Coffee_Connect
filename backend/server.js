@@ -45,7 +45,7 @@ const upload = multer({
 app.get('/', (req, res) => {
   res.json({
     status: 'ok',
-    message: 'ReshmeInfo Notification Server is running',
+    message: 'Coffee Connect Notification Server is running',
     timestamp: new Date().toISOString()
   });
 });
@@ -499,7 +499,7 @@ app.post('/send-notification', async (req, res) => {
     const expoTokens = allTokens.filter(t => t.tokenType === 'expo' || !t.tokenType).map(t => t.token);
 
     const notificationTitle = `${priceData.market} - ${priceData.breed} Price Update`;
-    const notificationBody = `Min: ₹${priceData.minPrice} | Max: ₹${priceData.maxPrice} | Avg: ₹${priceData.avgPrice}/kg`;
+    const notificationBody = `Min: ₹${priceData.minPrice} | Max: ₹${priceData.maxPrice} per 50kg bag`;
 
     let fcmSent = 0;
     let fcmFailed = 0;
@@ -523,7 +523,6 @@ app.post('/send-notification', async (req, res) => {
           breed: priceData.breed,
           minPrice: String(priceData.minPrice),
           maxPrice: String(priceData.maxPrice),
-          avgPrice: String(priceData.avgPrice),
         },
         android: {
           notification: {

@@ -36,7 +36,7 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
 
   const handleExtract = async () => {
     if (!inputText.trim()) {
-      Alert.alert('Error', 'Please paste market data text');
+      Alert.alert('Error', 'Please paste coffee depot price data');
       return;
     }
 
@@ -112,11 +112,11 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
       return;
     }
 
-    // Check permissions for the extracted market
+    // Check permissions for the extracted depot
     if (!adminAuth.hasMarketPermission(user, extractedData.market)) {
       Alert.alert(
         'Permission Denied',
-        `You do not have permission to update prices for ${extractedData.market} market`
+        `You do not have permission to update prices for ${extractedData.market} depot`
       );
       return;
     }
@@ -149,7 +149,7 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
                     expiresAt: sevenDaysFromNow,
                   };
 
-                  await addDoc(collection(db, COLLECTIONS.COCOON_PRICES), priceData);
+                  await addDoc(collection(db, COLLECTIONS.COFFEE_PRICES), priceData);
 
                   // Send push notification for this price entry
                   await sendPushNotifications(priceData);
@@ -202,7 +202,7 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
 
   const renderPriceEntry = (entry: PriceFormData, index: number) => {
     const isEditing = editingIndex === index;
-    const markets = ['Ramanagara', 'Kollegala', 'Kanakapura', 'Siddalagatta', 'Kolar'];
+    const markets = ['Madikeri', 'Virajpete', 'Kushalnagar', 'Somvarpete', 'Shanivarasanthe', 'Sakleshpura'];
 
     return (
       <View key={index} style={styles.entryCard}>
@@ -313,46 +313,24 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
               </View>
             </View>
 
-            {/* Lot Number */}
-            <View style={styles.editField}>
-              <Text style={styles.editFieldLabel}>Lot Number:</Text>
-              <TextInput
-                style={styles.editInput}
-                value={String(entry.lotNumber || '')}
-                onChangeText={(text) => updatePriceEntry(index, 'lotNumber', Number(text) || 0)}
-                placeholder="Enter lot number"
-                keyboardType="numeric"
-              />
-            </View>
-
             {/* Price Inputs */}
             <View style={styles.priceInputsRow}>
               <View style={styles.priceInputField}>
-                <Text style={styles.editFieldLabel}>Max (₹/kg):</Text>
+                <Text style={styles.editFieldLabel}>Max (₹/50kg):</Text>
                 <TextInput
                   style={styles.priceInput}
                   value={String(entry.maxPrice || '')}
-                  onChangeText={(text) => updatePriceEntry(index, 'maxPrice', Number(text) || 0)}
+                  onChangeText={(text) => {
+                    const val = Number(text) || 0;
+                    updatePriceEntry(index, 'maxPrice', val);
+                    updatePriceEntry(index, 'pricePerKg', val);
+                  }}
                   placeholder="Max"
                   keyboardType="numeric"
                 />
               </View>
               <View style={styles.priceInputField}>
-                <Text style={styles.editFieldLabel}>Avg (₹/kg):</Text>
-                <TextInput
-                  style={styles.priceInput}
-                  value={String(entry.avgPrice || '')}
-                  onChangeText={(text) => {
-                    const val = Number(text) || 0;
-                    updatePriceEntry(index, 'avgPrice', val);
-                    updatePriceEntry(index, 'pricePerKg', val);
-                  }}
-                  placeholder="Avg"
-                  keyboardType="numeric"
-                />
-              </View>
-              <View style={styles.priceInputField}>
-                <Text style={styles.editFieldLabel}>Min (₹/kg):</Text>
+                <Text style={styles.editFieldLabel}>Min (₹/50kg):</Text>
                 <TextInput
                   style={styles.priceInput}
                   value={String(entry.minPrice || '')}
@@ -367,24 +345,16 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
           // View Mode
           <View style={styles.entryDetails}>
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Market:</Text>
+              <Text style={styles.detailLabel}>Depot:</Text>
               <Text style={styles.detailValue}>{entry.market}</Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Lots:</Text>
-              <Text style={styles.detailValue}>{entry.lotNumber}</Text>
-            </View>
-            <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Maximum Price:</Text>
-              <Text style={styles.detailValue}>₹{entry.maxPrice}/kg</Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Average Price:</Text>
-              <Text style={[styles.detailValue, styles.priceHighlight]}>₹{entry.avgPrice}/kg</Text>
+              <Text style={[styles.detailValue, styles.priceHighlight]}>₹{entry.maxPrice}/50kg</Text>
             </View>
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Minimum Price:</Text>
-              <Text style={styles.detailValue}>₹{entry.minPrice}/kg</Text>
+              <Text style={styles.detailValue}>₹{entry.minPrice}/50kg</Text>
             </View>
           </View>
         )}
@@ -420,7 +390,7 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
               <Text style={styles.instructionTitle}>How to Use</Text>
             </View>
             <Text style={styles.instructionText}>
-              1. Copy market transaction data (Kannada or English){'\n'}
+              1. Copy coffee depot price data (Kannada or English){'\n'}
               2. Paste it in the text area below{'\n'}
               3. Click "Extract Data" to let AI analyze it{'\n'}
               4. Review and adjust the extracted data{'\n'}
@@ -432,12 +402,12 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
           {!showPreview ? (
             <>
               <View style={styles.inputSection}>
-                <Text style={styles.inputLabel}>Market Data Text</Text>
+                <Text style={styles.inputLabel}>Coffee Depot Price Data</Text>
                 <TextInput
                   style={styles.textArea}
                   value={inputText}
                   onChangeText={setInputText}
-                  placeholder="Paste market transaction data here (Kannada or English)..."
+                  placeholder="Paste coffee depot price data here (Kannada or English)..."
                   placeholderTextColor="#9CA3AF"
                   multiline
                   numberOfLines={12}

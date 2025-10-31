@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const isSmallScreen = SCREEN_HEIGHT < 700;
 
-const FIRST_LAUNCH_KEY = '@reshme_first_launch_completed';
+const FIRST_LAUNCH_KEY = '@coffee_first_launch_completed';
 
 interface LanguageSelectionScreenProps {
   onComplete: () => void;
@@ -193,7 +193,7 @@ export default function LanguageSelectionScreen({ onComplete }: LanguageSelectio
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Karnataka Cocoon Market Information System</Text>
+          <Text style={styles.footerText}>Karnataka Coffee Depot Price Information System</Text>
         </View>
       </ScrollView>
     </View>

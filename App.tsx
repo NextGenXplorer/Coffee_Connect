@@ -158,13 +158,18 @@ const AppContent = () => {
 
   // Initialize Google Mobile Ads for Coffee Connect
   useEffect(() => {
+    console.log('🚀 Initializing Google Mobile Ads...');
+    console.log('🔧 Environment:', __DEV__ ? 'DEVELOPMENT' : 'PRODUCTION');
+
     MobileAds()
       .initialize()
       .then(adapterStatuses => {
-        console.log('AdMob initialized:', adapterStatuses);
+        console.log('✅ AdMob initialized successfully!');
+        console.log('📊 Adapter statuses:', JSON.stringify(adapterStatuses, null, 2));
       })
       .catch(error => {
-        console.error('AdMob initialization error:', error);
+        console.error('❌ AdMob initialization error:', error);
+        console.error('❌ Error details:', JSON.stringify(error, null, 2));
       });
   }, []);
 
@@ -215,11 +220,23 @@ const AppContent = () => {
 
     const currentRoute = state.routes[state.index]?.name;
 
+    console.log(`📍 Navigation: ${previousRoute} → ${currentRoute}`);
+    console.log(`📊 Ad Status: isLoaded=${isLoaded}`);
+
     // Show interstitial ad occasionally when switching tabs (not every time to avoid annoyance)
     // Show ad 30% of the time when changing tabs
-    if (currentRoute && currentRoute !== previousRoute && isLoaded && Math.random() < 0.3) {
-      console.log(`Tab changed from ${previousRoute} to ${currentRoute}, showing interstitial ad`);
+    const randomChance = Math.random();
+    console.log(`🎲 Random chance: ${randomChance} (need < 0.3)`);
+
+    if (currentRoute && currentRoute !== previousRoute && isLoaded && randomChance < 0.3) {
+      console.log(`🎬 Showing interstitial ad: ${previousRoute} → ${currentRoute}`);
       showAd();
+    } else if (currentRoute !== previousRoute) {
+      if (!isLoaded) {
+        console.log('⏳ Ad not loaded yet, skipping');
+      } else if (randomChance >= 0.3) {
+        console.log('🎲 Random chance missed (30% probability), skipping ad');
+      }
     }
 
     setPreviousRoute(currentRoute);

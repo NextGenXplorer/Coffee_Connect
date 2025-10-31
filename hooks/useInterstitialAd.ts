@@ -33,6 +33,10 @@ export function useInterstitialAd(options?: UseInterstitialAdOptions) {
   const adUnitId = options?.adUnitId || AD_UNIT_ID;
 
   useEffect(() => {
+    console.log('🎯 Creating interstitial ad...');
+    console.log('🆔 Ad Unit ID:', adUnitId);
+    console.log('🔧 Environment:', __DEV__ ? 'DEV (using test ads)' : 'PROD (using real ads)');
+
     // Create and load the interstitial ad
     const ad = InterstitialAd.createForAdRequest(adUnitId, {
       requestNonPersonalizedAdsOnly: true, // For GDPR compliance
@@ -40,13 +44,16 @@ export function useInterstitialAd(options?: UseInterstitialAdOptions) {
 
     // Set up event listeners
     const loadedListener = ad.addAdEventListener(AdEventType.LOADED, () => {
-      console.log('Interstitial ad loaded successfully');
+      console.log('✅ Interstitial ad loaded successfully');
       setIsLoaded(true);
       setIsLoading(false);
     });
 
     const errorListener = ad.addAdEventListener(AdEventType.ERROR, (error) => {
-      console.error('Interstitial ad failed to load:', error);
+      console.error('❌ Interstitial ad failed to load');
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      console.error('❌ Full error:', JSON.stringify(error, null, 2));
       setIsLoaded(false);
       setIsLoading(false);
     });

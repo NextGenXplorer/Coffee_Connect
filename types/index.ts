@@ -1,6 +1,6 @@
-export interface CocoonPrice {
+export interface CoffeePrice {
   id: string;
-  breed: 'CB' | 'BV';
+  breed: 'Arabica Parchment' | 'Arabica Cherry' | 'Robusta Parchment' | 'Robusta Cherry';
   market: string;
   pricePerKg: number;
   minPrice: number;
@@ -17,15 +17,15 @@ export interface Market {
   isActive: boolean;
 }
 
-export interface Breed {
+export interface CoffeeVariety {
   id: string;
   name: string;
   description: string;
-  category: 'CB' | 'BV';
+  category: 'Arabica Parchment' | 'Arabica Cherry' | 'Robusta Parchment' | 'Robusta Cherry';
 }
 
 export interface PriceStatistics {
-  breed: 'CB' | 'BV';
+  breed: 'Arabica Parchment' | 'Arabica Cherry' | 'Robusta Parchment' | 'Robusta Cherry';
   market: string;
   minPrice: number;
   maxPrice: number;
@@ -46,9 +46,8 @@ export interface AdminSession {
 }
 
 export interface PriceFormData {
-  breed: 'CB' | 'BV';
+  breed: 'Arabica Parchment' | 'Arabica Cherry' | 'Robusta Parchment' | 'Robusta Cherry';
   market: string;
-  pricePerKg: number;
   minPrice: number;
   maxPrice: number;
   quality: 'A' | 'B' | 'C';

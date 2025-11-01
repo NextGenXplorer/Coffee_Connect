@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CocoonPrice } from '../types';
+import { CoffeePrice } from '../types';
 
 // Cache keys
 const CACHE_KEYS = {
@@ -13,14 +13,14 @@ const CACHE_KEYS = {
 const CACHE_EXPIRY_TIME = 24 * 60 * 60 * 1000;
 
 export interface CachedData {
-  data: CocoonPrice[];
+  data: CoffeePrice[];
   timestamp: number;
 }
 
 /**
  * Save data to cache with timestamp
  */
-export const saveToCache = async (key: string, data: CocoonPrice[]): Promise<void> => {
+export const saveToCache = async (key: string, data: CoffeePrice[]): Promise<void> => {
   try {
     const cachedData: CachedData = {
       data,

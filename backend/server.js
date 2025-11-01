@@ -17,8 +17,8 @@ const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  projectId: process.env.FIREBASE_PROJECT_ID || 'reshmeinfo',
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'reshmeinfo.appspot.com'
+  projectId: process.env.FIREBASE_PROJECT_ID || 'coffeeconnect-2d910',
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'coffeeconnect-2d910.firebasestorage.app'
 });
 
 const db = admin.firestore();

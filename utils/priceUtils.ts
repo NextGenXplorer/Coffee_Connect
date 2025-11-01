@@ -1,6 +1,6 @@
-import { CocoonPrice, PriceStatistics } from '../types';
+import { CoffeePrice, PriceStatistics } from '../types';
 
-export const calculatePriceStatistics = (prices: CocoonPrice[]): PriceStatistics[] => {
+export const calculatePriceStatistics = (prices: CoffeePrice[]): PriceStatistics[] => {
   const stats: { [key: string]: PriceStatistics } = {};
 
   prices.forEach(price => {
@@ -56,12 +56,12 @@ export const getPriceChange = (currentPrice: number, previousPrice: number): {
   };
 };
 
-export const filterPricesByBreed = (prices: CocoonPrice[], breed: string): CocoonPrice[] => {
+export const filterPricesByBreed = (prices: CoffeePrice[], breed: string): CoffeePrice[] => {
   if (breed === 'all') return prices;
   return prices.filter(price => price.breed === breed);
 };
 
-export const filterPricesByMarket = (prices: CocoonPrice[], market: string): CocoonPrice[] => {
+export const filterPricesByMarket = (prices: CoffeePrice[], market: string): CoffeePrice[] => {
   if (market === 'all') return prices;
   return prices.filter(price => price.market === market);
 };

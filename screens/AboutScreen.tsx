@@ -59,7 +59,7 @@ export default function AboutScreen({ setShowAdminPanel }: { setShowAdminPanel: 
   const handleContactPress = (type: 'email' | 'github' | 'instagram' | 'whatsapp') => {
     switch (type) {
       case 'email':
-        Linking.openURL('mailto:nxgextra@gmail.com');
+        Linking.openURL('mailto:nextgennxx@gmail.com');
         break;
       case 'github':
         Linking.openURL('https://github.com/NextGenXplorer');
@@ -172,7 +172,7 @@ export default function AboutScreen({ setShowAdminPanel }: { setShowAdminPanel: 
           <ContactCard
             icon="mail"
             title={t('emailUs')}
-            subtitle="nxgextra@gmail.com"
+            subtitle="nextgennxx@gmail.com"
             onPress={() => handleContactPress('email')}
             color="#3B82F6"
           />
@@ -220,7 +220,7 @@ export default function AboutScreen({ setShowAdminPanel }: { setShowAdminPanel: 
             </View>
             <View style={styles.appInfoRow}>
               <Text style={styles.appInfoLabel}>{t('lastUpdated')}</Text>
-              <Text style={styles.appInfoValue}>October 2025</Text>
+              <Text style={styles.appInfoValue}>November 2025</Text>
             </View>
             <View style={styles.appInfoRow}>
               <Text style={styles.appInfoLabel}>{t('platform')}</Text>

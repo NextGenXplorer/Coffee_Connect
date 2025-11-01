@@ -19,16 +19,16 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import NetInfo from '@react-native-community/netinfo';
 import * as Speech from 'expo-speech';
 import { db, COLLECTIONS } from '../firebase.config';
-import { CocoonPrice } from '../types';
-import { Ionicons } from '@expo/vector-icons';
+import { CoffeePrice } from '../types';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import { saveToCache, loadFromCache, getCacheAge, CACHE_KEYS, CachedData } from '../utils/cacheUtils';
 
 export default function HomeScreen() {
   const { t, i18n } = useTranslation();
-  const [prices, setPrices] = useState<CocoonPrice[]>([]);
-  const [filteredPrices, setFilteredPrices] = useState<CocoonPrice[]>([]);
+  const [prices, setPrices] = useState<CoffeePrice[]>([]);
+  const [filteredPrices, setFilteredPrices] = useState<CoffeePrice[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<string>('all');
   const [selectedMarket, setSelectedMarket] = useState<string>('all');
   const [loading, setLoading] = useState(true);
@@ -44,8 +44,26 @@ export default function HomeScreen() {
   const animatedValues = useRef<Animated.Value[]>([]).current;
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
-  const breeds = ['all', 'CB', 'BV'];
+  const breeds = ['all', 'Arabica Parchment', 'Arabica Cherry', 'Robusta Parchment', 'Robusta Cherry'];
   const markets = ['all', 'Madikeri', 'Virajpete', 'Kushalnagar', 'Somvarpete', 'Shanivarasanthe', 'Sakleshpura'];
+
+  // Breed mapping: old codes to new full names (for backward compatibility)
+  const breedMapping: { [key: string]: string } = {
+    'CB': 'Arabica Parchment',
+    'BV': 'Arabica Cherry',
+    'RP': 'Robusta Parchment',
+    'RC': 'Robusta Cherry',
+    // Also map new names to themselves for forward compatibility
+    'Arabica Parchment': 'Arabica Parchment',
+    'Arabica Cherry': 'Arabica Cherry',
+    'Robusta Parchment': 'Robusta Parchment',
+    'Robusta Cherry': 'Robusta Cherry',
+  };
+
+  // Helper function to normalize breed names
+  const normalizeBreed = (breed: string): string => {
+    return breedMapping[breed] || breed;
+  };
 
   const fetchPrices = async (dateFilter?: Date) => {
     try {
@@ -83,17 +101,17 @@ export default function HomeScreen() {
         endOfDay.setHours(23, 59, 59, 999);
 
         q = query(
-          collection(db, COLLECTIONS.COCOON_PRICES),
+          collection(db, COLLECTIONS.COFFEE_PRICES),
           where('lastUpdated', '>=', Timestamp.fromDate(startOfDay)),
           where('lastUpdated', '<=', Timestamp.fromDate(endOfDay)),
           orderBy('lastUpdated', 'desc')
         );
       } else {
-        q = query(collection(db, COLLECTIONS.COCOON_PRICES), orderBy('lastUpdated', 'desc'));
+        q = query(collection(db, COLLECTIONS.COFFEE_PRICES), orderBy('lastUpdated', 'desc'));
       }
 
       const querySnapshot = await getDocs(q);
-      const pricesData: CocoonPrice[] = [];
+      const pricesData: CoffeePrice[] = [];
       const now = new Date();
 
       querySnapshot.forEach((doc) => {
@@ -107,9 +125,14 @@ export default function HomeScreen() {
             ...data,
             lastUpdated: data.lastUpdated.toDate(),
             expiresAt: expiresAt,
-          } as CocoonPrice);
+          } as CoffeePrice);
         }
       });
+
+      // Debug: Log unique breed values
+      const uniqueBreeds = [...new Set(pricesData.map(p => p.breed))];
+      console.log('🔍 DEBUG: Unique breeds in database:', uniqueBreeds);
+      console.log('🔍 DEBUG: Total prices fetched:', pricesData.length);
 
       setPrices(pricesData);
 
@@ -158,7 +181,7 @@ export default function HomeScreen() {
 
   }, []);
 
-  const animateCards = (itemsToAnimate: CocoonPrice[]) => {
+  const animateCards = (itemsToAnimate: CoffeePrice[]) => {
     animatedValues.length = 0;
     itemsToAnimate.forEach(() => {
       animatedValues.push(new Animated.Value(0));
@@ -177,19 +200,34 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
+    console.log('🔍 FILTER DEBUG: selectedBreed =', selectedBreed);
+    console.log('🔍 FILTER DEBUG: selectedMarket =', selectedMarket);
+    console.log('🔍 FILTER DEBUG: Total prices =', prices.length);
+
     let filtered = prices;
 
     if (selectedBreed !== 'all') {
-      filtered = filtered.filter((price) => price.breed === selectedBreed);
+      console.log('🔍 FILTER DEBUG: Filtering by breed:', selectedBreed);
+      // Normalize both the filter value and database values for comparison
+      filtered = filtered.filter((price) => {
+        const normalizedPriceBreed = normalizeBreed(price.breed);
+        const normalizedSelectedBreed = normalizeBreed(selectedBreed);
+        console.log('🔍 FILTER DEBUG: Comparing', normalizedPriceBreed, '===', normalizedSelectedBreed);
+        return normalizedPriceBreed === normalizedSelectedBreed;
+      });
+      console.log('🔍 FILTER DEBUG: After breed filter:', filtered.length);
     }
 
     if (selectedMarket !== 'all') {
+      console.log('🔍 FILTER DEBUG: Filtering by market:', selectedMarket);
       filtered = filtered.filter((price) => price.market === selectedMarket);
+      console.log('🔍 FILTER DEBUG: After market filter:', filtered.length);
     }
 
     // Sort alphabetically by market (A-Z)
     filtered = filtered.sort((a, b) => a.market.localeCompare(b.market));
 
+    console.log('🔍 FILTER DEBUG: Final filtered count:', filtered.length);
     setFilteredPrices(filtered);
     animateCards(filtered);
   }, [selectedBreed, selectedMarket, prices]);
@@ -238,7 +276,7 @@ export default function HomeScreen() {
     }
   };
 
-  const speakPrice = async (item: CocoonPrice) => {
+  const speakPrice = async (item: CoffeePrice) => {
     try {
       // Stop any ongoing speech
       await Speech.stop();
@@ -256,7 +294,8 @@ export default function HomeScreen() {
       const langCode = currentLang === 'kn' ? 'kn-IN' : 'en-IN';
 
       // Build the speech text based on current language
-      const breedText = t(`breed_${item.breed}` as any, item.breed);
+      const normalizedBreed = normalizeBreed(item.breed);
+      const breedText = t(`breed_${normalizedBreed}` as any, normalizedBreed);
       const marketText = t(`market_${item.market}` as any, item.market);
 
       // Form natural sentences based on language
@@ -316,12 +355,24 @@ export default function HomeScreen() {
     >
       {isSelected ? (
         <View style={styles.ultraModernFilterGradient}>
-          {icon && <Ionicons name={icon as any} size={14} color="#FFFFFF" style={{ marginRight: 6 }} />}
+          {icon && (
+            icon === 'seedling' ? (
+              <FontAwesome5 name={icon} size={14} color="#FFFFFF" style={{ marginRight: 6 }} />
+            ) : (
+              <Ionicons name={icon as any} size={14} color="#FFFFFF" style={{ marginRight: 6 }} />
+            )
+          )}
           <Text style={styles.ultraModernFilterTextSelected}>{title}</Text>
         </View>
       ) : (
         <View style={styles.ultraModernFilterContent}>
-          {icon && <Ionicons name={icon as any} size={14} color="#6B7280" style={{ marginRight: 6 }} />}
+          {icon && (
+            icon === 'seedling' ? (
+              <FontAwesome5 name={icon} size={14} color="#6B7280" style={{ marginRight: 6 }} />
+            ) : (
+              <Ionicons name={icon as any} size={14} color="#6B7280" style={{ marginRight: 6 }} />
+            )
+          )}
           <Text style={styles.ultraModernFilterText}>{title}</Text>
         </View>
       )}
@@ -329,7 +380,7 @@ export default function HomeScreen() {
   );
 
 
-  const renderPriceCard = ({ item }: { item: CocoonPrice }) => {
+  const renderPriceCard = ({ item }: { item: CoffeePrice }) => {
     return (
       <View style={styles.ultraModernCard}>
         <View style={styles.ultraModernCardGradient}>
@@ -338,10 +389,10 @@ export default function HomeScreen() {
             <View style={styles.ultraModernCardHeader}>
               <View style={styles.breedSection}>
                 <View style={styles.breedIconContainer}>
-                  <Ionicons name="cafe" size={18} color="#6B4423" />
+                  <FontAwesome5 name="seedling" size={18} color="#6B4423" />
                 </View>
                 <View style={styles.breedInfo}>
-                  <Text style={styles.ultraModernBreedText}>{t(`breed_${item.breed}` as any, item.breed)}</Text>
+                  <Text style={styles.ultraModernBreedText}>{t(`breed_${normalizeBreed(item.breed)}` as any, normalizeBreed(item.breed))}</Text>
                   <View style={styles.qualityBadgeContainer}>
                     <View style={styles.ultraModernQualityBadge}>
                       <Ionicons name="star" size={10} color="#92400E" />
@@ -449,7 +500,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.ultraModernContainer}>
-      <Header title={t('cocoonPrices')} />
+      <Header title={t('coffeePrices')} />
       {/* Offline Mode Banner */}
       {isOffline && (
         <View style={styles.offlineBanner}>
@@ -502,7 +553,7 @@ export default function HomeScreen() {
                     title={t(`breed_${item}`)}
                     isSelected={selectedBreed === item}
                     onPress={() => setSelectedBreed(item)}
-                    icon={item === 'all' ? 'grid' : 'cafe'}
+                    icon={item === 'all' ? 'grid' : 'seedling'}
                   />
                 ))}
               </ScrollView>

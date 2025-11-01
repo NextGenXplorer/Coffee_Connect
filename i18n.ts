@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from './locales/en.json';
 import kn from './locales/kn.json';
 
-const LANGUAGE_STORAGE_KEY = '@reshme_language_preference';
+const LANGUAGE_STORAGE_KEY = '@coffee_language_preference';
 
 // Load saved language preference
 const loadLanguage = async () => {

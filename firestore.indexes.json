@@ -1,7 +1,7 @@
 {
   "indexes": [
     {
-      "collectionGroup": "cocoonPrices",
+      "collectionGroup": "coffeePrices",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -11,7 +11,7 @@
       ]
     },
     {
-      "collectionGroup": "cocoonPrices",
+      "collectionGroup": "coffeePrices",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "collectionGroup": "cocoonPrices",
+      "collectionGroup": "coffeePrices",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -38,7 +38,7 @@
         },
         {
           "fieldPath": "pricePerKg",
-          "order": "ASCENDIN"
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "lastUpdated",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "collectionGroup": "cocoonPrices",
+      "collectionGroup": "coffeePrices",
       "queryScope": "COLLECTION",
       "fields": [
         {

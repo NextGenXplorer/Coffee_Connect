@@ -114,7 +114,7 @@ export default function AdminNotificationScreen({
       await addDoc(collection(db, COLLECTIONS.NOTIFICATIONS), notificationData);
 
       // Step 2: Send push notification via backend
-      const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://reshme-info.vercel.app';
+      const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://coffeeconnect-backend.vercel.app';
 
       try {
         const pushResponse = await fetch(`${backendUrl}/send-custom-notification`, {

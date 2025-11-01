@@ -209,10 +209,10 @@ export default function AdminAIExtractScreen({ user, onBack }: AdminAIExtractScr
         <View style={styles.entryHeader}>
           <View style={styles.entryInfo}>
             <View style={[styles.breedBadge, {
-              backgroundColor: entry.breed === 'CB' ? '#3B82F615' : '#10B98115'
+              backgroundColor: entry.breed === 'Arabica Parchment' ? '#3B82F615' : '#10B98115'
             }]}>
               <Text style={[styles.breedText, {
-                color: entry.breed === 'CB' ? '#3B82F6' : '#10B981'
+                color: entry.breed === 'Arabica Parchment' ? '#3B82F6' : '#10B981'
               }]}>
                 {entry.breed}
               </Text>

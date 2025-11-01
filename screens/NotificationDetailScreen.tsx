@@ -22,8 +22,8 @@ interface NotificationDetailScreenProps {
   onBack: () => void;
 }
 
-const DEVICE_ID_KEY = '@reshme_device_id';
-const READ_NOTIFICATIONS_KEY = '@reshme_read_notifications';
+const DEVICE_ID_KEY = '@coffee_device_id';
+const READ_NOTIFICATIONS_KEY = '@coffee_read_notifications';
 
 export default function NotificationDetailScreen({
   notification,

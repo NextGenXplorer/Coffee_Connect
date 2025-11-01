@@ -15,13 +15,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { collection, addDoc, updateDoc, doc, Timestamp, getDocs } from 'firebase/firestore';
 import { db, COLLECTIONS } from '../firebase.config';
-import { AdminUser, CocoonPrice, PriceFormData } from '../types';
+import { AdminUser, CoffeePrice, PriceFormData } from '../types';
 import { adminAuth } from '../utils/adminAuth';
 import Header from '../components/Header';
 
 interface AdminPriceFormScreenProps {
   user: AdminUser;
-  priceToEdit?: CocoonPrice | null;
+  priceToEdit?: CoffeePrice | null;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -37,9 +37,8 @@ export default function AdminPriceFormScreen({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState<PriceFormData>({
-    breed: 'CB',
+    breed: 'Arabica Parchment',
     market: user.market === 'all' ? 'Madikeri' : user.market,
-    pricePerKg: 0,
     minPrice: 0,
     maxPrice: 0,
     quality: 'A',
@@ -52,7 +51,6 @@ export default function AdminPriceFormScreen({
       setFormData({
         breed: priceToEdit.breed,
         market: priceToEdit.market,
-        pricePerKg: priceToEdit.pricePerKg,
         minPrice: priceToEdit.minPrice,
         maxPrice: priceToEdit.maxPrice,
         quality: priceToEdit.quality,
@@ -75,10 +73,6 @@ export default function AdminPriceFormScreen({
 
     if (!formData.market.trim()) {
       newErrors.market = 'Market is required';
-    }
-
-    if (formData.pricePerKg <= 0) {
-      newErrors.pricePerKg = 'Price per kg must be greater than 0';
     }
 
     if (formData.minPrice <= 0) {
@@ -125,11 +119,11 @@ export default function AdminPriceFormScreen({
 
       if (priceToEdit) {
         // Update existing price
-        await updateDoc(doc(db, COLLECTIONS.COCOON_PRICES, priceToEdit.id), priceData);
+        await updateDoc(doc(db, COLLECTIONS.COFFEE_PRICES, priceToEdit.id), priceData);
         Alert.alert(t('success'), t('priceUpdatedSuccessfully'));
       } else {
         // Add new price
-        await addDoc(collection(db, COLLECTIONS.COCOON_PRICES), priceData);
+        await addDoc(collection(db, COLLECTIONS.COFFEE_PRICES), priceData);
         Alert.alert(t('success'), t('newPriceAddedSuccessfully'));
       }
 
@@ -203,7 +197,6 @@ export default function AdminPriceFormScreen({
     return (
       formData.breed !== priceToEdit.breed ||
       formData.market !== priceToEdit.market ||
-      formData.pricePerKg !== priceToEdit.pricePerKg ||
       formData.minPrice !== priceToEdit.minPrice ||
       formData.maxPrice !== priceToEdit.maxPrice ||
       formData.quality !== priceToEdit.quality
@@ -288,12 +281,12 @@ export default function AdminPriceFormScreen({
 
           {/* Breed Selection */}
           <View style={styles.inputSection}>
-            <Text style={styles.inputLabel}>{t('cocoonBreedRequired')}</Text>
+            <Text style={styles.inputLabel}>{t('coffeeVarietyRequired')}</Text>
             <View style={styles.chipsContainer}>
-              {(['CB', 'BV'] as const).map(breed => (
+              {(['Arabica Parchment', 'Arabica Cherry', 'Robusta Parchment', 'Robusta Cherry'] as const).map(breed => (
                 <FilterChip
                   key={breed}
-                  label={t(breed === 'CB' ? 'crossBreed' : 'bivoltine')}
+                  label={t(`breed_${breed}`)}
                   isActive={formData.breed === breed}
                   onPress={() => updateField('breed', breed)}
                 />
@@ -314,26 +307,6 @@ export default function AdminPriceFormScreen({
                 />
               ))}
             </View>
-          </View>
-
-          {/* Price Per Kg */}
-          <View style={styles.inputSection}>
-            <Text style={styles.inputLabel}>{t('currentPricePerKg')}</Text>
-            <View style={[styles.inputWrapper, errors.pricePerKg && styles.inputError]}>
-              <Ionicons name="cash-outline" size={20} color="#6B7280" />
-              <TextInput
-                style={styles.textInput}
-                value={formData.pricePerKg.toString()}
-                onChangeText={(text) => updateField('pricePerKg', parseFloat(text) || 0)}
-                placeholder={t('enterCurrentPrice')}
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-                editable={!loading}
-              />
-            </View>
-            {errors.pricePerKg && (
-              <Text style={styles.errorText}>{errors.pricePerKg}</Text>
-            )}
           </View>
 
           {/* Price Range */}
@@ -386,7 +359,7 @@ export default function AdminPriceFormScreen({
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>{t('breedLabel')}</Text>
-              <Text style={styles.summaryValue}>{t(formData.breed === 'CB' ? 'crossBreed' : 'bivoltine')}</Text>
+              <Text style={styles.summaryValue}>{t(`breed_${formData.breed}`)}</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>{t('qualityLabel')}</Text>

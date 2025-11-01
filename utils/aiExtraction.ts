@@ -115,29 +115,27 @@ Notes:
     // Convert to PriceFormData entries
     const priceEntries: PriceFormData[] = [];
 
-    // Add Arabica Parchment/CB entry if present
+    // Add Arabica Parchment entry if present
     if (extractedData.arabicaParchment) {
       priceEntries.push({
-        breed: 'CB',
+        breed: 'Arabica Parchment',
         market: extractedData.market,
         pricePerKg: extractedData.arabicaParchment.maxPrice,
         minPrice: extractedData.arabicaParchment.minPrice,
         maxPrice: extractedData.arabicaParchment.maxPrice,
         quality: 'A', // Default quality, admin can change
-        lotNumber: 0, // Not used for coffee
       });
     }
 
-    // Add Arabica Cherry/BV entry if present
+    // Add Arabica Cherry entry if present
     if (extractedData.arabicaCherry) {
       priceEntries.push({
-        breed: 'BV',
+        breed: 'Arabica Cherry',
         market: extractedData.market,
         pricePerKg: extractedData.arabicaCherry.maxPrice,
         minPrice: extractedData.arabicaCherry.minPrice,
         maxPrice: extractedData.arabicaCherry.maxPrice,
         quality: 'A', // Default quality, admin can change
-        lotNumber: 0, // Not used for coffee
       });
     }
 

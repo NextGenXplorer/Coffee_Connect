@@ -19,7 +19,7 @@ import { collection, getDocs, orderBy, query, where, Timestamp } from 'firebase/
 import NetInfo from '@react-native-community/netinfo';
 import Header from '../components/Header';
 import { db, COLLECTIONS } from '../firebase.config';
-import { CocoonPrice } from '../types';
+import { CoffeePrice } from '../types';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { saveToCache, loadFromCache, getCacheAge, CACHE_KEYS } from '../utils/cacheUtils';
 
@@ -54,7 +54,7 @@ interface MarketSummary {
 
 export default function MarketScreen() {
   const { t } = useTranslation();
-  const [prices, setPrices] = useState<CocoonPrice[]>([]);
+  const [prices, setPrices] = useState<CoffeePrice[]>([]);
   const [marketSummaries, setMarketSummaries] = useState<MarketSummary[]>([]);
   const [filteredSummaries, setFilteredSummaries] = useState<MarketSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -147,13 +147,13 @@ export default function MarketScreen() {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       const q = query(
-        collection(db, COLLECTIONS.COCOON_PRICES),
+        collection(db, COLLECTIONS.COFFEE_PRICES),
         where('lastUpdated', '>=', Timestamp.fromDate(thirtyDaysAgo)),
         orderBy('lastUpdated', 'desc')
       );
 
       const querySnapshot = await getDocs(q);
-      const pricesData: CocoonPrice[] = [];
+      const pricesData: CoffeePrice[] = [];
       const now = new Date();
 
       querySnapshot.forEach((doc) => {
@@ -167,7 +167,7 @@ export default function MarketScreen() {
             ...data,
             lastUpdated: data.lastUpdated.toDate(),
             expiresAt: expiresAt,
-          } as CocoonPrice);
+          } as CoffeePrice);
         }
       });
 
@@ -207,7 +207,7 @@ export default function MarketScreen() {
       });
     }
 
-    const marketGroups: { [key: string]: CocoonPrice[] } = {};
+    const marketGroups: { [key: string]: CoffeePrice[] } = {};
 
     filteredPrices.forEach(price => {
       if (!marketGroups[price.market]) {
@@ -226,7 +226,7 @@ export default function MarketScreen() {
       }
 
       // Calculate breed-specific prices
-      const breedGroups: { [key: string]: CocoonPrice[] } = {};
+      const breedGroups: { [key: string]: CoffeePrice[] } = {};
       marketPrices.forEach(price => {
         if (!breedGroups[price.breed]) {
           breedGroups[price.breed] = [];
@@ -345,10 +345,10 @@ export default function MarketScreen() {
   const renderBreedPrice = (breedData: BreedPriceData) => (
     <View key={breedData.breed} style={styles.breedPriceRow}>
       <View style={[styles.breedPriceBadge, {
-        backgroundColor: breedData.breed === 'CB' ? '#3B82F615' : '#10B98115'
+        backgroundColor: breedData.breed === 'Arabica Parchment' ? '#3B82F615' : '#10B98115'
       }]}>
         <Text style={[styles.breedPriceText, {
-          color: breedData.breed === 'CB' ? '#3B82F6' : '#10B981'
+          color: breedData.breed === 'Arabica Parchment' ? '#3B82F6' : '#10B981'
         }]}>
           {t(`breed_${breedData.breed}` as any, breedData.breed)}
         </Text>
@@ -486,7 +486,7 @@ export default function MarketScreen() {
       <SafeAreaView style={styles.container}>
         <Header
           title={t('marketCenters')}
-          subtitle={t('silkCocoonTradingHubs')}
+          subtitle={t('coffeeDepots')}
         />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3B82F6" />
@@ -500,7 +500,7 @@ export default function MarketScreen() {
     <SafeAreaView style={styles.container}>
       <Header
         title={t('marketCenters')}
-        subtitle={t('silkCocoonTradingHubs')}
+        subtitle={t('coffeeDepots')}
       />
 
       {isOffline && (

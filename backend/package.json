@@ -1,7 +1,7 @@
 {
-  "name": "reshmeinfo-notification-server",
+  "name": "coffeeconnect-notification-server",
   "version": "1.0.0",
-  "description": "Backend server for ReshmeInfo FCM notifications",
+  "description": "Backend server for Coffee Connect FCM notifications",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, BackHandler } from 'react-native';
 import { adminAuth } from '../utils/adminAuth';
-import { AdminUser, CocoonPrice } from '../types';
+import { AdminUser, CoffeePrice } from '../types';
 import AdminLoginScreen from './AdminLoginScreen';
 import AdminDashboardScreen from './AdminDashboardScreen';
 import AdminPriceFormScreen from './AdminPriceFormScreen';
@@ -17,7 +17,7 @@ interface AdminNavigatorProps {
 export default function AdminNavigator({ onExit }: AdminNavigatorProps) {
   const [currentScreen, setCurrentScreen] = useState<AdminScreen>('login');
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
-  const [priceToEdit, setPriceToEdit] = useState<CocoonPrice | null>(null);
+  const [priceToEdit, setPriceToEdit] = useState<CoffeePrice | null>(null);
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function AdminNavigator({ onExit }: AdminNavigatorProps) {
     setCurrentScreen('add_price');
   };
 
-  const handleEditPrice = (price: CocoonPrice) => {
+  const handleEditPrice = (price: CoffeePrice) => {
     setPriceToEdit(price);
     setCurrentScreen('edit_price');
   };

@@ -3,7 +3,7 @@ import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firesto
 import { db, COLLECTIONS } from '../firebase.config';
 import { Notification } from '../types';
 
-const READ_NOTIFICATIONS_KEY = '@reshme_read_notifications';
+const READ_NOTIFICATIONS_KEY = '@coffee_read_notifications';
 
 export const getReadNotifications = async (): Promise<string[]> => {
   try {

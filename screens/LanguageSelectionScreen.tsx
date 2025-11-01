@@ -10,7 +10,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import i18n, { saveLanguagePreference } from '../i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -68,8 +68,8 @@ export default function LanguageSelectionScreen({ onComplete }: LanguageSelectio
             styles.logoContainer,
             isSmallScreen && styles.logoContainerSmall
           ]}>
-            <Ionicons
-              name="cafe"
+            <FontAwesome5
+              name="seedling"
               size={isSmallScreen ? 40 : 60}
               color="#6B4423"
             />

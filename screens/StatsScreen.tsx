@@ -16,12 +16,12 @@ import { saveToCache, loadFromCache, getCacheAge, CACHE_KEYS } from '../utils/ca
 import Header from '../components/Header';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db, COLLECTIONS } from '../firebase.config';
-import { CocoonPrice } from '../types';
+import { CoffeePrice } from '../types';
 
 export default function StatsScreen() {
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
-  const [prices, setPrices] = useState<CocoonPrice[]>([]);
+  const [prices, setPrices] = useState<CoffeePrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOffline, setIsOffline] = useState(false);
   const [cacheTimestamp, setCacheTimestamp] = useState<string>('');
@@ -59,9 +59,9 @@ export default function StatsScreen() {
 
       setIsOffline(false);
 
-      const q = query(collection(db, COLLECTIONS.COCOON_PRICES), orderBy('lastUpdated', 'desc'));
+      const q = query(collection(db, COLLECTIONS.COFFEE_PRICES), orderBy('lastUpdated', 'desc'));
       const querySnapshot = await getDocs(q);
-      const pricesData: CocoonPrice[] = [];
+      const pricesData: CoffeePrice[] = [];
       const now = new Date();
 
       querySnapshot.forEach((doc) => {
@@ -75,7 +75,7 @@ export default function StatsScreen() {
             ...data,
             lastUpdated: data.lastUpdated.toDate(),
             expiresAt: expiresAt,
-          } as CocoonPrice);
+          } as CoffeePrice);
         }
       });
 
@@ -105,7 +105,7 @@ export default function StatsScreen() {
 
   // Group prices by day
   const groupPricesByDay = () => {
-    const grouped: { [key: string]: CocoonPrice[] } = {};
+    const grouped: { [key: string]: CoffeePrice[] } = {};
 
     prices.forEach(price => {
       const dateKey = price.lastUpdated.toDateString();
@@ -123,7 +123,7 @@ export default function StatsScreen() {
       .sort((a, b) => b.date.getTime() - a.date.getTime()); // Most recent first
   };
 
-  const calculateDayStats = (dayPrices: CocoonPrice[]) => {
+  const calculateDayStats = (dayPrices: CoffeePrice[]) => {
     if (dayPrices.length === 0) {
       return {
         totalListings: 0,
@@ -177,7 +177,7 @@ export default function StatsScreen() {
     };
   };
 
-  const getMarketDistribution = (dayPrices: CocoonPrice[]) => {
+  const getMarketDistribution = (dayPrices: CoffeePrice[]) => {
     const distribution: { [key: string]: number } = {};
     dayPrices.forEach(price => {
       distribution[price.market] = (distribution[price.market] || 0) + 1;
@@ -187,7 +187,7 @@ export default function StatsScreen() {
       .sort((a, b) => b.count - a.count);
   };
 
-  const getBreedDistribution = (dayPrices: CocoonPrice[]) => {
+  const getBreedDistribution = (dayPrices: CoffeePrice[]) => {
     const distribution: { [key: string]: number } = {};
     dayPrices.forEach(price => {
       distribution[price.breed] = (distribution[price.breed] || 0) + 1;
@@ -401,7 +401,7 @@ export default function StatsScreen() {
                 {breedDistribution.length > 0 && (
                   <View style={styles.distributionSection}>
                     <Text style={[styles.sectionTitle, isSmallScreen && styles.sectionTitleSmall]}>{t('breedDistribution')}</Text>
-                    <Text style={[styles.sectionSubtitle, isSmallScreen && styles.sectionSubtitleSmall]}>{t('cocoonBreedDistribution')}</Text>
+                    <Text style={[styles.sectionSubtitle, isSmallScreen && styles.sectionSubtitleSmall]}>{t('coffeeVarietyDistribution')}</Text>
                     <View style={styles.distributionChart}>
                       {breedDistribution.map((item, index) => (
                         <DistributionBar

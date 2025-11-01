@@ -115,7 +115,7 @@ export default function AdminLoginScreen({ onLoginSuccess, onCancel }: AdminLogi
   const handleForgotPassword = () => {
     Alert.alert(
       'Password Recovery',
-      'Please contact your system administrator for password recovery.\n\nSupport: admin@reshmeinfo.com',
+      'Please contact your system administrator for password recovery.\n\nSupport: nextgennxx@gmail.com',
       [{ text: 'OK' }]
     );
   };

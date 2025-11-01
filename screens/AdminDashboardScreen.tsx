@@ -14,7 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { collection, getDocs, orderBy, query, where, deleteDoc, doc, writeBatch, Timestamp } from 'firebase/firestore';
 import { db, COLLECTIONS } from '../firebase.config';
-import { AdminUser, CocoonPrice } from '../types';
+import { AdminUser, CoffeePrice } from '../types';
 import { adminAuth } from '../utils/adminAuth';
 import Header from '../components/Header';
 
@@ -24,7 +24,7 @@ interface AdminDashboardScreenProps {
   user: AdminUser;
   onLogout: () => void;
   onAddPrice: () => void;
-  onEditPrice: (price: CocoonPrice) => void;
+  onEditPrice: (price: CoffeePrice) => void;
   onManageNotifications: () => void;
   onAIExtract: () => void;
 }
@@ -45,7 +45,7 @@ export default function AdminDashboardScreen({
   onAIExtract,
 }: AdminDashboardScreenProps) {
   const { t } = useTranslation();
-  const [prices, setPrices] = useState<CocoonPrice[]>([]);
+  const [prices, setPrices] = useState<CoffeePrice[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
     totalPrices: 0,
     todayUpdates: 0,
@@ -77,19 +77,19 @@ export default function AdminDashboardScreen({
 
       if (user.role === 'super_admin') {
         // Super admin sees all prices
-        q = query(collection(db, COLLECTIONS.COCOON_PRICES), orderBy('lastUpdated', 'desc'));
+        q = query(collection(db, COLLECTIONS.COFFEE_PRICES), orderBy('lastUpdated', 'desc'));
       } else {
         // Market admin sees only their market prices
         const markets = adminAuth.getAvailableMarkets(user);
         q = query(
-          collection(db, COLLECTIONS.COCOON_PRICES),
+          collection(db, COLLECTIONS.COFFEE_PRICES),
           where('market', 'in', markets),
           orderBy('lastUpdated', 'desc')
         );
       }
 
       const querySnapshot = await getDocs(q);
-      const pricesData: CocoonPrice[] = [];
+      const pricesData: CoffeePrice[] = [];
       const now = new Date();
 
       querySnapshot.forEach((doc) => {
@@ -104,7 +104,7 @@ export default function AdminDashboardScreen({
           lastUpdated: data.lastUpdated.toDate(),
           expiresAt: expiresAt,
           isExpired: expiresAt ? expiresAt <= now : false,
-        } as CocoonPrice & { isExpired?: boolean });
+        } as CoffeePrice & { isExpired?: boolean });
       });
 
       setPrices(pricesData);
@@ -163,7 +163,7 @@ export default function AdminDashboardScreen({
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, COLLECTIONS.COCOON_PRICES, priceId));
+              await deleteDoc(doc(db, COLLECTIONS.COFFEE_PRICES, priceId));
               await fetchDashboardData();
               Alert.alert('Success', 'Price entry deleted successfully');
             } catch (error) {
@@ -209,7 +209,7 @@ export default function AdminDashboardScreen({
               const now = new Date();
 
               // Get all prices
-              const q = query(collection(db, COLLECTIONS.COCOON_PRICES));
+              const q = query(collection(db, COLLECTIONS.COFFEE_PRICES));
               const querySnapshot = await getDocs(q);
 
               const batch = writeBatch(db);
@@ -251,7 +251,7 @@ export default function AdminDashboardScreen({
     );
   };
 
-  const renderPriceItem = ({ item }: { item: CocoonPrice }) => {
+  const renderPriceItem = ({ item }: { item: CoffeePrice }) => {
     const canEdit = adminAuth.hasMarketPermission(user, item.market);
 
     return (
@@ -261,12 +261,12 @@ export default function AdminDashboardScreen({
             <Text style={styles.priceMarket}>{item.market}</Text>
             <View style={styles.priceDetails}>
               <View style={[styles.breedBadge, {
-                backgroundColor: item.breed === 'CB' ? '#3B82F615' : '#10B98115'
+                backgroundColor: item.breed === 'Arabica Parchment' ? '#3B82F615' : '#10B98115'
               }]}>
                 <Text style={[styles.breedText, {
-                  color: item.breed === 'CB' ? '#3B82F6' : '#10B981'
+                  color: item.breed === 'Arabica Parchment' ? '#3B82F6' : '#10B981'
                 }]}>
-                  {t(item.breed === 'CB' ? 'crossBreed' : 'bivoltine')}
+                  {t(`breed_${item.breed}`)}
                 </Text>
               </View>
               <View style={[styles.qualityBadge, {
